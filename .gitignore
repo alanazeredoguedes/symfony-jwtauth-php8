@@ -1,5 +1,6 @@
 
 ###> symfony/framework-bundle ###
+.env
 /.env.local
 /.env.local.php
 /.env.*.local
@@ -14,7 +15,19 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
+###> jwt/keys ###
+./config/jwt/private.pem
+./config/jwt/public.pem
+###> jwt/keys ###
+
+
+.idea
+
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
