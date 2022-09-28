@@ -19,6 +19,7 @@ security:
         login:
             pattern: ^/api/login
             stateless: true
+            provider: app_user_provider
             json_login:
                 check_path: /api/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -27,6 +28,7 @@ security:
                 password_path: password
 
         api:
+            provider: app_user_provider
             pattern: ^/api
             stateless: true
             jwt: ~
@@ -35,9 +37,12 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
+        admin:
             lazy: true
             provider: app_user_provider
+            custom_authenticator: App\Security\AppCustomAuthenticator
+            logout:
+                path: app_logout
 
 
 
@@ -47,6 +52,8 @@ security:
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/dashboard,       roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:
