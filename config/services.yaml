@@ -32,7 +32,12 @@ services:
         #arguments: [ ~ , App\Application\Project\UserBundle\Entity\User, App\Application\Project\UserBundle\Controller\UserAdminController ]
         tags:
             #- { name: sonata.admin, manager_type: orm, group: "Autenticação", label: User, on_top: false, icon: 'fa fa-solid fa-user' }
-            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\User, controller: App\Application\Project\UserBundle\Controller\UserAdminController, group: "Autenticação", label: User, on_top: false, icon: 'fa fa-solid fa-user' }
+            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\User, controller: App\Application\Project\UserBundle\Controller\UserAdminController, group: "Autenticação", label: Usuario, on_top: false, icon: 'fa fa-solid fa-user' }
+
+    admin.group:
+        class: App\Application\Project\UserBundle\Admin\GroupAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\Group, controller: App\Application\Project\UserBundle\Controller\GroupAdminController, group: "Autenticação", label: Grupo, on_top: false, icon: 'fa fa-solid fa-user' }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

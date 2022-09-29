@@ -2,7 +2,6 @@
 
 namespace App\Application\Project\UserBundle\Controller;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Application\Project\UserBundle\Entity\User;
@@ -17,22 +16,22 @@ use OpenApi\Attributes as OA;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
-#[OA\Tag(name: 'user')]
 #[Route('/api', name: 'api_')]
 class UserApiController extends AbstractController
 {
-    private $JWTManager;
+    private JWTTokenManagerInterface $JWTManager;
 
     public function __construct(JWTTokenManagerInterface $jwt) {
         $this->JWTManager = $jwt;
     }
 
 
-    #[Route('/login', name: 'api_user_login', methods: ['GET', 'POST'])]
+    #[OA\Tag(name: 'Authentication')]
     #[OA\Response(
         response: 200,
         description: 'Return list of users',
     )]
+    #[Route('/login', name: 'api_user_login', methods: ['POST'])]
     public function loginAction(ManagerRegistry $doctrine, Request $request): JsonResponse
     {
         $entityManager = $doctrine->getManager();
@@ -44,14 +43,26 @@ class UserApiController extends AbstractController
     }
 
 
-    #[Route('/user', name: 'api_user_list', methods: ['GET'])]
+    #[OA\Tag(name: 'user')]
     #[OA\Response(
         response: 200,
         description: 'Return list of users',
-        content: new Model(type: User::class)
+        #content: new Model(type: User::class)
+        content: new OA\JsonContent(ref: new Model(type: User::class))
+        /*content: new OA\JsonContent(example: new OA\Schema(
+            #type: 'object',
+            properties: [
+                new OA\Property(property: 'username', type: 'string'),
+                new OA\Property(property: 'email', type: 'string'),
+                new OA\Property(property: 'roles', type: 'string',)
+            ]
+        ))*/
+    )]
+    #[OA\RequestBody(
     )]
     ##[IsGranted('ROLE_USER')]
     ##[IsGranted('ROLE_API_DASHBOARDS')]
+    #[Route('/user', name: 'api_user_list', methods: ['GET'])]
     public function listAction(ManagerRegistry $doctrine): Response
     {
         #$this->denyAccessUnlessGranted('ROLE_API_DASHBOARDS');
@@ -72,12 +83,14 @@ class UserApiController extends AbstractController
         return $this->json($data);
     }
 
+    #[OA\Tag(name: 'user')]
     #[Route('/user', name: 'api_user_create', methods: ['POST'])]
     #[OA\Response(
         response: 200,
         description: 'Create a new User',
         content: new Model(type: User::class)
     )]
+    #[OA\RequestBody()]
     public function createAction(ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $entityManager = $doctrine->getManager();
@@ -99,8 +112,8 @@ class UserApiController extends AbstractController
         return $this->json('Created new {user} successfully with id ' . $user->getId());
     }
 
+    #[OA\Tag(name: 'user')]
     #[Route('/user/{id}', name: 'api_user_show', methods: ['GET'])]
-
     public function showAction(ManagerRegistry $doctrine, int $id): Response
     {
         $user = $doctrine->getRepository(User::class)->find($id);
@@ -120,6 +133,7 @@ class UserApiController extends AbstractController
     }
 
 
+    #[OA\Tag(name: 'user')]
     #[Route('/user/{id}', name: 'api_user_edit', methods: ['PUT'])]
     public function editAction(ManagerRegistry $doctrine, Request $request, int $id): Response
     {
@@ -148,6 +162,7 @@ class UserApiController extends AbstractController
     }
 
 
+    #[OA\Tag(name: 'user')]
     #[Route('/user/{id}', name: 'api_user_delete', methods: ['DELETE'])]
     public function deleteAction(ManagerRegistry $doctrine, int $id): Response
     {
