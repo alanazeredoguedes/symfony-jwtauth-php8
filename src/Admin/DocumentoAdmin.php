@@ -1,6 +1,7 @@
 <?php
 namespace App\Admin;
 
+use App\Application\Project\AdminBundle\Service\RolesIdentifierService;
 use App\Entity\Documento;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -20,7 +21,6 @@ final class DocumentoAdmin extends AbstractAdmin
         return $object instanceof Documento ? $object->getId() : '';
     }
 
-
    /* protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {
         return 'documento';
@@ -30,6 +30,7 @@ final class DocumentoAdmin extends AbstractAdmin
     {
         //$collection->add('login');
         //$collection->add('logout');
+        $collection->remove('edit');
     }
 
     protected function configureFormFields(FormMapper $form): void
@@ -53,7 +54,8 @@ final class DocumentoAdmin extends AbstractAdmin
         $this->setListMode('list');
         #unset($this->listModes['mosaic']);
 
-        $list->addIdentifier('titulo');
+        $list->addIdentifier('titulo', null, ['route' => ['name' => 'edit']]);
+
         $list->addIdentifier('subtitulo');
         $list->addIdentifier('descricao');
     }

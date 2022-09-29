@@ -1,14 +1,14 @@
 <?php  
          
-namespace App\Application\AdminBundle;
+namespace App\Application\Project\AdminBundle;
                 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ApplicationAdminBundle extends Bundle
+class ApplicationProjectAdminBundle extends Bundle
 {
     /** {@inheritdoc} */
     public function getParent()
     {
-        return 'ApplicationAdminBundle';
+        return 'ApplicationProjectAdminBundle';
     }
 }

@@ -1,14 +1,13 @@
 <?php
 
 namespace App\Application\Project\UserBundle\Controller;
-use Sonata\AdminBundle\Controller\CRUDController;
+use App\Application\Project\AdminBundle\Controller\CRUDBaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class UserAdminController extends CRUDController
+class UserAdminController extends CRUDBaseController
 {
-
 
     public function loginAction(AuthenticationUtils $authenticationUtils): Response
     {
@@ -30,8 +29,4 @@ class UserAdminController extends CRUDController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    public function listAction(Request $request): Response
-    {
-        return parent::listAction($request);
-    }
 }

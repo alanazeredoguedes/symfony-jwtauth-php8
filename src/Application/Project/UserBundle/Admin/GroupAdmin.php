@@ -1,6 +1,7 @@
 <?php
 namespace App\Application\Project\UserBundle\Admin;
 
+use App\Application\Project\AdminBundle\Service\RolesIdentifierService;
 use App\Application\Project\UserBundle\Entity\Group;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -14,6 +15,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 final class GroupAdmin extends AbstractAdmin
 {
+
+    private RolesIdentifierService $rolesIdentifierService;
+
+    public function __construct(RolesIdentifierService $rolesIdentifierService, ?string $code = null, ?string $class = null, ?string $baseControllerName = null)
+    {
+        $this->rolesIdentifierService = $rolesIdentifierService;
+        parent::__construct($code, $class, $baseControllerName);
+
+    }
 
     public function toString(object $object): string
     {
@@ -34,6 +44,9 @@ final class GroupAdmin extends AbstractAdmin
 
     protected function configureFormFields(FormMapper $form): void
     {
+
+        $this->rolesIdentifierService->getAdminRoles();
+
 
         //dump('asda');
 

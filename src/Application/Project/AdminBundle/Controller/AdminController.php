@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\AdminBundle\Controller;
+namespace App\Application\Project\AdminBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +14,7 @@ class AdminController extends AbstractController
     public function teste(): Response
     {
 
-        #return $this->render('@ApplicationAdmin/templates/standard_layout.html.twig')
+        #return $this->render('@ApplicationProjectAdmin/templates/standard_layout.html.twig')
         return $this->json([
             'message' => 'Admin Teste',
             'path' => 'src/Controller/ApiTesteController.php',

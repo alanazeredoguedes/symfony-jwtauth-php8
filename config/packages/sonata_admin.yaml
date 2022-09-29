@@ -5,7 +5,7 @@ sonata_admin:
             - { type: sonata.admin.block.admin_list, position: left }
 
     templates:
-        layout: '@ApplicationAdmin/templates/standard_layout.html.twig'
+        layout: '@ApplicationProjectAdmin/templates/standard_layout.html.twig'
     #        ajax:                       '@SonataAdmin/ajax_layout.html.twig'
     #        list:                       '@SonataAdmin/CRUD/list.html.twig'
     #        show:                       '@SonataAdmin/CRUD/show.html.twig'
