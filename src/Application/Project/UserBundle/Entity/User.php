@@ -6,6 +6,7 @@ use App\Application\Project\UserBundle\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use OpenApi\Attributes as OA;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -13,20 +14,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[OA\Property(description: 'The unique identifier of the user.')]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[OA\Property(description: 'The username of client.')]
     private ?string $username = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[OA\Property(description: 'The email of client.')]
     private ?string $email = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'roles', unique: false)]
+    #[OA\Property(description: 'The roles access of client.')]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
+    /** @var string The hashed password */
     #[ORM\Column]
     private ?string $password = null;
 

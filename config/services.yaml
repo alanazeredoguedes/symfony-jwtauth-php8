@@ -22,6 +22,11 @@ services:
 
     # Project Services
 
+    app.controller.user:
+        class: App\Application\Project\UserBundle\Controller\UserApiController
+        arguments:
+            - '@lexik_jwt_authentication.jwt_manager'
+
     admin.user:
         class: App\Application\Project\UserBundle\Admin\UserAdmin
         #arguments: [ ~ , App\Application\Project\UserBundle\Entity\User, App\Application\Project\UserBundle\Controller\UserAdminController ]
