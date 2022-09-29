@@ -37,7 +37,6 @@ final class GroupAdmin extends AbstractAdmin
 
         //dump('asda');
 
-
         $form->tab('Geral');
             $form->with('Informações Do Grupo');
 

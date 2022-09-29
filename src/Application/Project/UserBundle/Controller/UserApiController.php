@@ -19,9 +19,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 #[Route('/api', name: 'api_')]
 class UserApiController extends AbstractController
 {
-    private JWTTokenManagerInterface $JWTManager;
+    private ?JWTTokenManagerInterface $JWTManager = null;
 
-    public function __construct(JWTTokenManagerInterface $jwt) {
+    public function __construct(JWTTokenManagerInterface $jwt = null) {
         $this->JWTManager = $jwt;
     }
 
@@ -49,19 +49,10 @@ class UserApiController extends AbstractController
         description: 'Return list of users',
         #content: new Model(type: User::class)
         content: new OA\JsonContent(ref: new Model(type: User::class))
-        /*content: new OA\JsonContent(example: new OA\Schema(
-            #type: 'object',
-            properties: [
-                new OA\Property(property: 'username', type: 'string'),
-                new OA\Property(property: 'email', type: 'string'),
-                new OA\Property(property: 'roles', type: 'string',)
-            ]
-        ))*/
     )]
-    #[OA\RequestBody(
-    )]
-    ##[IsGranted('ROLE_USER')]
-    ##[IsGranted('ROLE_API_DASHBOARDS')]
+    ##[OA\RequestBody()]
+    ##[IsGranted('IS_AUTHENTICATED_FULLY')]
+    ##[IsGranted('ROLE_API_LIST')]
     #[Route('/user', name: 'api_user_list', methods: ['GET'])]
     public function listAction(ManagerRegistry $doctrine): Response
     {

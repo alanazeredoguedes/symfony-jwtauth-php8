@@ -41,3 +41,8 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    app.documento:
+        class: App\Admin\DocumentoAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, model_class: App\Entity\Documento, group: "Documentos", label: Documento, on_top: false, icon: 'fa fa-solid fa-user' }
