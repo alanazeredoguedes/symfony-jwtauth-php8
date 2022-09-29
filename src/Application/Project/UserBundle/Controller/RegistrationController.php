@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\Application\Project\UserBundle\Controller;
 
-use App\Entity\Doc\User;
+use App\Application\Project\UserBundle\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

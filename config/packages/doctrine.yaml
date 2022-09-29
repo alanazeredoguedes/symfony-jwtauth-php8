@@ -12,12 +12,12 @@ doctrine:
 
         mappings:
 
-            App2:
-                is_bundle: false
-                type: attribute
-                dir: '%kernel.project_dir%/src/Entity/Doc'
-                prefix: 'App\Entity\Doc'
-                alias: App
+#            App2:
+#                is_bundle: false
+#                type: attribute
+#                dir: '%kernel.project_dir%/src/Entity/Doc'
+#                prefix: 'App\Entity\Doc'
+#                alias: App
 
             App:
                 is_bundle: false
@@ -28,6 +28,7 @@ doctrine:
                 alias: App
 
             SonataMediaBundle: ~
+            ApplicationProjectUserBundle: ~
 
 when@test:
     doctrine:

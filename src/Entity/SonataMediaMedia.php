@@ -11,7 +11,7 @@ use Sonata\MediaBundle\Entity\BaseMedia;
 // * @ORM\Table(name="media__media")
 // */
 #[ORM\Entity]
-#[ORM\Table(name: "media__media")]
+#[ORM\Table(name: "media")]
 class SonataMediaMedia extends BaseMedia
 {
 

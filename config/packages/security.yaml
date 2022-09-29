@@ -3,7 +3,7 @@ security:
     enable_authenticator_manager: true
 
     password_hashers:
-        App\Entity\Doc\User: 'auto'
+        App\Application\Project\UserBundle\Entity\User: 'auto'
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
             algorithm: 'auto'
             cost: 15
@@ -12,11 +12,12 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
-                class: App\Entity\Doc\User
+                class: App\Application\Project\UserBundle\Entity\User
                 property: email
 
     firewalls:
-        login:
+
+        login: # API LOGIN
             pattern: ^/api/login
             stateless: true
             provider: app_user_provider
@@ -27,32 +28,31 @@ security:
                 username_path: email
                 password_path: password
 
-        api:
+        api: # API
             provider: app_user_provider
             pattern: ^/api
             stateless: true
             jwt: ~
 
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+#        dev:
+#            pattern: ^/(_(profiler|wdt)|css|images|js)/
+#            security: false
 
-        admin:
+
+        admin: # ADMIN
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppCustomAuthenticator
+            custom_authenticator: App\Application\Project\UserBundle\Security\UserAuthenticator
             logout:
-                path: app_logout
-
-
+                path: admin_project_user_user_logout
 
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/user/login, roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/dashboard,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

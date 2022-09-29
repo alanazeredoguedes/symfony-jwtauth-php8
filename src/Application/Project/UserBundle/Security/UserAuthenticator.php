@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security;
+namespace App\Application\Project\UserBundle\Security;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,11 +15,11 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
+class UserAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const LOGIN_ROUTE = 'admin_project_user_user_login';
 
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
@@ -44,8 +44,10 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
 //            return new RedirectResponse($targetPath);
-            return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
+            return new RedirectResponse($this->urlGenerator->generate('sonata_admin_dashboard'));
         }
+
+        return new RedirectResponse($this->urlGenerator->generate('sonata_admin_dashboard'));
 
         // For example:
         // return new RedirectResponse($this->urlGenerator->generate('some_route'));

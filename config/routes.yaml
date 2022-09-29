@@ -1,3 +1,11 @@
+application.user.user:
+    resource: '@ApplicationProjectUserBundle/Resources/config/routes/routes.yaml'
+    prefix: /
+
+application.admin.admin:
+    resource: '@ApplicationAdminBundle/Resources/config/routes/routes.yaml'
+    prefix: /
+
 media:
     resource: '@SonataMediaBundle/Resources/config/routing/media.xml'
     prefix: /media

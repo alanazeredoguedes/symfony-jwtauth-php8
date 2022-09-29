@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Sonata\MediaBundle\Entity\BaseGallery;
 
 #[ORM\Entity]
-#[ORM\Table(name: "media__gallery")]
+#[ORM\Table(name: "gallery")]
 /*
  * @ORM\Entity
  * @ORM\Table(name="media__gallery")
