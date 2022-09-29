@@ -1,0 +1,24 @@
+nelmio_api_doc:
+    documentation:
+        #        servers:
+        #            - url: http://api.example.com/unsafe
+        #              description: API over HTTP
+        #            - url: https://api.example.com/secured
+        #              description: API over HTTPS
+        info:
+            title: Minha Aplicação
+            description: Essa é a descrição de minha aplicação!
+            version: 1.0.0
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+        security:
+            - Bearer: []
+    areas: # Agrupa a documentação da api em areas separadas
+        default:
+            path_patterns: [ ^/api ]
+
+

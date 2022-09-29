@@ -16,14 +16,4 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('sonata_admin_dashboard');
     }
 
-    #[Route('/api/teste', name: 'api_teste')]
-    public function teste(): Response
-    {
-        return $this->json([
-            'message' => 'Api Teste',
-            'path' => 'src/Controller/ApiTesteController.php',
-        ]);
-    }
-
-
 }
