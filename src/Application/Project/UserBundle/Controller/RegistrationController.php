@@ -21,6 +21,7 @@ class RegistrationController extends AbstractController
     public function index(ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $em = $doctrine->getManager();
+
         $decoded = json_decode($request->getContent());
         $username = $decoded->username;
         $email = $decoded->email;

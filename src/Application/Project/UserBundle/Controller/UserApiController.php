@@ -2,17 +2,16 @@
 
 namespace App\Application\Project\UserBundle\Controller;
 
-use App\Application\Project\UserBundle\Entity\User;
-use Nelmio\ApiDocBundle\Model\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\Security;
-use OpenApi\Attributes as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Application\Project\UserBundle\Entity\User;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Persistence\ManagerRegistry;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Attributes as OA;
 
 #[Route('/api', name: 'api_')]
 class UserApiController extends AbstractController
@@ -21,8 +20,8 @@ class UserApiController extends AbstractController
     #[Route('/user', name: 'api_user_list', methods: ['GET'])]
     #[OA\Response(
         response: 200,
-        description: 'Retorna lista de usuarios',
-        #content: new Model(type: User::class)
+        description: 'Return list of users',
+        content: new Model(type: User::class)
     )]
     #[IsGranted('ROLE_USER')]
     #[IsGranted('ROLE_API_DASHBOARDS')]
@@ -47,14 +46,25 @@ class UserApiController extends AbstractController
     }
 
     #[Route('/user', name: 'api_user_create', methods: ['POST'])]
-    public function createAction(ManagerRegistry $doctrine, Request $request): Response
+    #[OA\Response(
+        response: 200,
+        description: 'Create a new User',
+        content: new Model(type: User::class)
+    )]
+    public function createAction(ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $entityManager = $doctrine->getManager();
 
+        $decoded = json_decode($request->getContent());
+        $username = $decoded->username;
+        $email = $decoded->email;
+        $plaintextPassword = $decoded->password;
+
         $user = new User();
-        $user->setUsername($request->request->get('username'));
-        $user->setEmail($request->request->get('email'));
-        $user->setPassword($request->request->get('password'));
+
+        $user->setUsername($username);
+        $user->setEmail($email);
+        $user->setPassword($passwordHasher->hashPassword($user, $plaintextPassword));
 
         $entityManager->persist($user);
         $entityManager->flush();
