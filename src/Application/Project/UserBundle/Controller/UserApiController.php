@@ -44,14 +44,13 @@ class UserApiController extends AbstractController
     }
 
 
-
     #[Route('/user', name: 'api_user_list', methods: ['GET'])]
     #[OA\Response(
         response: 200,
         description: 'Return list of users',
         content: new Model(type: User::class)
     )]
-    #[IsGranted('ROLE_USER')]
+    ##[IsGranted('ROLE_USER')]
     ##[IsGranted('ROLE_API_DASHBOARDS')]
     public function listAction(ManagerRegistry $doctrine): Response
     {
