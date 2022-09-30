@@ -139,6 +139,9 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "simplethings/entity-audit-bundle": {
+        "version": "1.8.0"
+    },
     "sonata-project/admin-bundle": {
         "version": "4.19",
         "recipe": {

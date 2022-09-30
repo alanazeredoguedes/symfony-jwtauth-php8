@@ -19,6 +19,7 @@
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.8",
         "sensio/framework-extra-bundle": "^6.1",
+        "simplethings/entity-audit-bundle": "^1.8",
         "sonata-project/admin-bundle": "^4.19",
         "sonata-project/doctrine-orm-admin-bundle": "^4.7",
         "sonata-project/media-bundle": "^4.5",

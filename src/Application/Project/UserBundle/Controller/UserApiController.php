@@ -135,11 +135,14 @@ class UserApiController extends AbstractController
             return $this->json('No user found for id' . $id, 404);
         }
 
-        $user->setUsername($request->request->get('username'));
-        $user->setEmail($request->request->get('email'));
-        $user->setPassword($request->request->get('password'));
+        $decoded = json_decode($request->getContent());
+        $username = $decoded->username;
+        $email = $decoded->email;
 
-        //$entityManager->persist($user);
+        $user->setUsername($username);
+        $user->setEmail($email);
+
+        $entityManager->persist($user);
         $entityManager->flush();
 
         $data = [

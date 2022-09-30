@@ -45,7 +45,6 @@ final class GroupAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $form): void
     {
 
-        $this->rolesIdentifierService->getAdminRoles();
 
 
         //dump('asda');
@@ -102,6 +101,8 @@ final class GroupAdmin extends AbstractAdmin
 
     protected function configureListFields(ListMapper $list): void
     {
+        $this->rolesIdentifierService->getAdminRoles();
+
         $this->setListMode('list');
         #unset($this->listModes['mosaic']);
 

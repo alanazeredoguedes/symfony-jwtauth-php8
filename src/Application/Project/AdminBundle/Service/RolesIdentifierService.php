@@ -7,6 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RolesIdentifierService extends AbstractController
 {
+    private string $authRouterRegister = "App\Application\Project\AdminBundle\Attributes\AuthRouterRegister";
+
     public function __construct()
     {
         //dump('dsa');
@@ -29,26 +31,53 @@ class RolesIdentifierService extends AbstractController
 
     }
 
-    /**
-     * @throws \ReflectionException
-     */
+
     public function getAdminRoles(){
         $adminControllers = $this->getControllerPath('AdminController');
 
 
-        $reflection = new ClassReflection($adminControllers[count($adminControllers)-3]);
-        dump($reflection->name);
+        $reflection = new \ReflectionClass($adminControllers[count($adminControllers)-3]);
 
-        foreach ($reflection->getMethods() as $method) {
-            if(str_contains($method->name, 'Action'))
-                dump($method->name);
+        $attributes = $reflection->getAttributes();
 
+
+
+        $config = $routes = [];
+
+        foreach ($attributes as $attribute) {
+            if($attribute->getName() === $this->authRouterRegister){
+                $config['groupName'] = $attribute->getArguments()['groupName'];
+                $config['description'] = $attribute->getArguments()['description'];
+                break;
+            }
         }
 
-        /*foreach ($adminControllers as $controller){
 
+        foreach ($reflection->getMethods() as $method) {
+            $router = [];
+            if(!str_contains($method->name, 'Action'))
+                continue;
 
-        }*/
+            //dump($method);
+            foreach ($method->getAttributes() as $attribute) {
+                if($attribute->getName() === $this->authRouterRegister){
+
+                    $args = $attribute->getArguments();
+
+                    $router['routerName'] = ( isset( $args['routerName'] ) )? $args['routerName'] : false;
+                    $router['description'] = ( isset( $args['description'] ) )? $args['description'] : false;
+                    $router['role'] = ( isset( $args['role'] ) )? $args['role'] : false;
+
+                    if($router['routerName'] && $router['role'])
+                        $config['routes'][] = $router;
+
+                    break;
+                }
+            }
+
+        }
+        dd($config);
+
 
     }
 

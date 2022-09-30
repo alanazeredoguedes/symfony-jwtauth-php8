@@ -30,7 +30,7 @@ final class DocumentoAdmin extends AbstractAdmin
     {
         //$collection->add('login');
         //$collection->add('logout');
-        $collection->remove('edit');
+        //$collection->remove('edit');
     }
 
     protected function configureFormFields(FormMapper $form): void
