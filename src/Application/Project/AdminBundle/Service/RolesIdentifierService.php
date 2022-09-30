@@ -42,7 +42,7 @@ class RolesIdentifierService extends AbstractController
 
 
 
-        $config = $routes = [];
+        $config = [];
 
         foreach ($attributes as $attribute) {
             if($attribute->getName() === $this->authRouterRegister){
@@ -58,7 +58,6 @@ class RolesIdentifierService extends AbstractController
             if(!str_contains($method->name, 'Action'))
                 continue;
 
-            //dump($method);
             foreach ($method->getAttributes() as $attribute) {
                 if($attribute->getName() === $this->authRouterRegister){
 
@@ -76,9 +75,10 @@ class RolesIdentifierService extends AbstractController
             }
 
         }
-        dd($config);
+        //dd($config);
 
 
+        return $config;
     }
 
     public function getApiRoles(){

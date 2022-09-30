@@ -16,6 +16,7 @@ use OpenApi\Attributes as OA;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 #[Route('/api', name: 'api_')]
 class UserApiController extends AbstractController
 {

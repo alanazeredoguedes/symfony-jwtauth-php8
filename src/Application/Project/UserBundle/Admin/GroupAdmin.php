@@ -9,6 +9,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -38,14 +39,27 @@ final class GroupAdmin extends AbstractAdmin
 
     protected function configureRoutes(RouteCollectionInterface $collection): void
     {
+
+        //$adminRoles = $this->rolesIdentifierService->getAdminRoles();
+
         /*$collection->add('login');
         $collection->add('logout');*/
+        //$collection->remove('batch');
+
     }
 
     protected function configureFormFields(FormMapper $form): void
     {
 
+        $adminRoles = $this->rolesIdentifierService->getAdminRoles();
 
+        $choices = [];
+
+        foreach ($adminRoles['routes'] as $roles){
+            $choices[] = [ $roles['routerName'] => $roles['role'] ];
+        }
+
+        dump($adminRoles);
 
         //dump('asda');
 
@@ -69,9 +83,12 @@ final class GroupAdmin extends AbstractAdmin
         $form->tab('Admin');
             $form->with('Permissões Administrativas');
 
-                $form->add('adminRoles', CollectionType::class, [
+                $form->add('adminRoles', ChoiceType::class, [
                     'label' => 'Admin Roles',
                     'required' => false,
+                    'multiple' => true,
+                    'choices' => $choices,
+                    'expanded'=> false,
                 ]);
 
             $form->end();
@@ -101,7 +118,6 @@ final class GroupAdmin extends AbstractAdmin
 
     protected function configureListFields(ListMapper $list): void
     {
-        $this->rolesIdentifierService->getAdminRoles();
 
         $this->setListMode('list');
         #unset($this->listModes['mosaic']);

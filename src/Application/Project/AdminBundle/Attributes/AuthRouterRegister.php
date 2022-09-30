@@ -8,10 +8,10 @@ class AuthRouterRegister
 {
 
     public function __construct(
-        ?string $groupName = null,
         ?string $routerName = null,
-        ?string $description = null,
         ?string $role = null,
+        ?string $groupName = null,
+        ?string $description = null,
     ){
 
     }
