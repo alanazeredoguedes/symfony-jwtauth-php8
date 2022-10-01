@@ -25,7 +25,7 @@ class RolesIdentifierService extends AbstractController
         $apiControllers = $this->getControllerPath('ApiController');
         $allControllers = array_merge($adminControllers, $apiControllers);
 
-        dump($allControllers);
+        //dump($allControllers);
 
 
 
@@ -36,53 +36,115 @@ class RolesIdentifierService extends AbstractController
         $adminControllers = $this->getControllerPath('AdminController');
 
 
-        $reflection = new \ReflectionClass($adminControllers[count($adminControllers)-3]);
 
-        $attributes = $reflection->getAttributes();
+        $allData = [];
 
+        foreach ($adminControllers as $adminController){
 
+            $config = [];
 
-        $config = [];
-
-        foreach ($attributes as $attribute) {
-            if($attribute->getName() === $this->authRouterRegister){
-                $config['groupName'] = $attribute->getArguments()['groupName'];
-                $config['description'] = $attribute->getArguments()['description'];
-                break;
-            }
-        }
+            $reflection = new \ReflectionClass($adminController);
+            $attributes = $reflection->getAttributes();
 
 
-        foreach ($reflection->getMethods() as $method) {
-            $router = [];
-            if(!str_contains($method->name, 'Action'))
-                continue;
-
-            foreach ($method->getAttributes() as $attribute) {
+            foreach ($attributes as $attribute) {
                 if($attribute->getName() === $this->authRouterRegister){
 
-                    $args = $attribute->getArguments();
+                    $config['groupName'] = $attribute->getArguments()['groupName'];
+                    $config['description'] = $attribute->getArguments()['description'];
 
-                    $router['routerName'] = ( isset( $args['routerName'] ) )? $args['routerName'] : false;
-                    $router['description'] = ( isset( $args['description'] ) )? $args['description'] : false;
-                    $router['role'] = ( isset( $args['role'] ) )? $args['role'] : false;
+                    foreach ($reflection->getMethods() as $method) {
+                        $router = [];
+                        if(!str_contains($method->name, 'Action'))
+                            continue;
 
-                    if($router['routerName'] && $router['role'])
-                        $config['routes'][] = $router;
+                        foreach ($method->getAttributes() as $attribute) {
+                            if($attribute->getName() === $this->authRouterRegister){
+
+                                $args = $attribute->getArguments();
+
+                                $router['routerName'] = ( isset( $args['routerName'] ) )? $args['routerName'] : false;
+                                $router['description'] = ( isset( $args['description'] ) )? $args['description'] : false;
+                                $router['role'] = ( isset( $args['role'] ) )? $args['role'] : false;
+
+                                if($router['routerName'] && $router['role'])
+                                    $config['routes'][] = $router;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    $allData[] = $config;
 
                     break;
                 }
             }
 
         }
+
         //dd($config);
-
-
-        return $config;
+        return $allData;
     }
 
-    public function getApiRoles(){
 
+
+
+
+
+
+
+    public function getApiRoles(){
+        $adminControllers = $this->getControllerPath('ApiController');
+
+        $allData = [];
+
+        foreach ($adminControllers as $adminController){
+
+            $config = [];
+
+            $reflection = new \ReflectionClass($adminController);
+            $attributes = $reflection->getAttributes();
+
+
+            foreach ($attributes as $attribute) {
+                if($attribute->getName() === $this->authRouterRegister){
+
+                    $config['groupName'] = $attribute->getArguments()['groupName'];
+                    $config['description'] = $attribute->getArguments()['description'];
+
+                    foreach ($reflection->getMethods() as $method) {
+                        $router = [];
+                        if(!str_contains($method->name, 'Action'))
+                            continue;
+
+                        foreach ($method->getAttributes() as $attribute) {
+                            if($attribute->getName() === $this->authRouterRegister){
+
+                                $args = $attribute->getArguments();
+
+                                $router['routerName'] = ( isset( $args['routerName'] ) )? $args['routerName'] : false;
+                                $router['description'] = ( isset( $args['description'] ) )? $args['description'] : false;
+                                $router['role'] = ( isset( $args['role'] ) )? $args['role'] : false;
+
+                                if($router['routerName'] && $router['role'])
+                                    $config['routes'][] = $router;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    $allData[] = $config;
+
+                    break;
+                }
+            }
+
+        }
+
+        //dd($config);
+        return $allData;
     }
 
 

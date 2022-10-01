@@ -4,11 +4,14 @@ namespace App\Application\Project\UserBundle\Controller;
 
 use App\Application\Project\AdminBundle\Attributes\AuthRouterRegister;
 use App\Application\Project\AdminBundle\Controller\CRUDBaseController;
+use App\Application\Project\AdminBundle\Service\RolesIdentifierService;
 use Laminas\Code\Reflection\ClassReflection;
 use Laminas\Code\Reflection\FunctionReflection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Sonata\AdminBundle\Exception\ModelManagerException;
+use Sonata\AdminBundle\Exception\ModelManagerThrowable;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -17,9 +20,15 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 #[AuthRouterRegister(groupName: 'Grupo', description: 'Permissões do modulo Grupo')]
 class GroupAdminController extends CRUDController
 {
+    private RolesIdentifierService $rolesIdentifierService;
+
+    public function __construct(RolesIdentifierService $rolesIdentifierService)
+    {
+        $this->rolesIdentifierService = $rolesIdentifierService;
+    }
 
     ##[IsGranted(data: "ROLE_ADMIN_GROUP_LIST")]
-    #[AuthRouterRegister(routerName: 'Listar', role: "ROLE_ADMIN_GROUP_LIST", description: '...')]
+    #[AuthRouterRegister(routerName: 'Listar', role: "ROLE_ADMIN_GROUP_LIST", description: 'Lista todos os grupos do cadastrados.')]
     public function listAction(Request $request): Response
     {
         return parent::listAction($request);
@@ -32,44 +41,28 @@ class GroupAdminController extends CRUDController
         return parent::showAction($request);
     }
 
-    #[AuthRouterRegister(
-        routerName: 'Criar',
-        description: '...',
-        role: "ROLE_ADMIN_GROUP_CREATE"
-    )]
+    #[AuthRouterRegister(routerName: 'Criar', role: "ROLE_ADMIN_GROUP_CREATE", description: '...')]
     ##[IsGranted(data: "ROLE_ADMIN_GROUP_CREATE")]
     public function createAction(Request $request): Response
     {
         return parent::createAction($request);
     }
 
-    #[AuthRouterRegister(
-        routerName: 'Editar',
-        description: '...',
-        role: "ROLE_ADMIN_GROUP_EDIT"
-    )]
+    #[AuthRouterRegister(routerName: 'Editar', role: "ROLE_ADMIN_GROUP_EDIT", description: '...')]
     ##[IsGranted(data: "ROLE_ADMIN_GROUP_EDIT")]
     public function editAction(Request $request): Response
     {
         return parent::editAction($request);
     }
 
-    #[AuthRouterRegister(
-        routerName: 'Excluir',
-        description: '...',
-        role: "ROLE_ADMIN_GROUP_DELETE"
-    )]
+    #[AuthRouterRegister(routerName: 'Excluir', role: "ROLE_ADMIN_GROUP_DELETE", description: '...')]
     ##[IsGranted(data: "ROLE_ADMIN_GROUP_DELETE")]
     public function deleteAction(Request $request): Response
     {
         return parent::deleteAction($request);
     }
 
-    /*#[AuthRouterRegister(
-        routerName: 'Excluir em Lote',
-        description: '...',
-        role: "ROLE_ADMIN_GROUP_BATCH"
-    )]*/
+    #[AuthRouterRegister(routerName: 'Excluir em Lote', role: "ROLE_ADMIN_GROUP_BATCH", description: '...')]
     ##[IsGranted(data: "ROLE_ADMIN_GROUP_DELETE")]
     public function batchAction(Request $request): Response
     {
@@ -82,22 +75,14 @@ class GroupAdminController extends CRUDController
         return parent::batchActionDelete($query);
     }
 
-    #[AuthRouterRegister(
-        routerName: 'Exportar',
-        description: '...',
-        role: "ROLE_ADMIN_GROUP_EXPORT"
-    )]
+    #[AuthRouterRegister(routerName: 'Exportar', role: "ROLE_ADMIN_GROUP_EXPORT", description: '...')]
     ##[IsGranted(data: "ROLE_ADMIN_GROUP_EXPORT")]
     public function exportAction(Request $request): Response
     {
         return parent::exportAction($request);
     }
 
-    #[AuthRouterRegister(
-        routerName: 'Auditoria',
-        description: '...',
-        role: "ROLE_ADMIN_GROUP_AUDIT"
-    )]
+    #[AuthRouterRegister(routerName: 'Auditoria', role: "ROLE_ADMIN_GROUP_AUDIT", description: '...')]
     ##[IsGranted(data: "ROLE_ADMIN_GROUP_AUDIT")]
     public function historyAction(Request $request): Response
     {
@@ -114,6 +99,19 @@ class GroupAdminController extends CRUDController
     public function historyCompareRevisionsAction(Request $request, string $baseRevision, string $compareRevision): Response
     {
         return parent::historyCompareRevisionsAction($request, $baseRevision, $compareRevision);
+    }
+
+
+    public function listAllRolesAction()
+    {
+        $adminRoles = $this->rolesIdentifierService->getAdminRoles();
+        $apiRoles = $this->rolesIdentifierService->getApiRoles();
+
+        $data = [
+            'adminRoles' => $adminRoles,
+            'apiRoles' => $apiRoles,
+        ];
+        return $this->json($data);
     }
 
 

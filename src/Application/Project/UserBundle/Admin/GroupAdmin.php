@@ -39,7 +39,7 @@ final class GroupAdmin extends AbstractAdmin
 
     protected function configureRoutes(RouteCollectionInterface $collection): void
     {
-
+        $collection->add('listAllRoles');
         //$adminRoles = $this->rolesIdentifierService->getAdminRoles();
 
         /*$collection->add('login');
@@ -52,16 +52,22 @@ final class GroupAdmin extends AbstractAdmin
     {
 
         $adminRoles = $this->rolesIdentifierService->getAdminRoles();
+        $apiRoles = $this->rolesIdentifierService->getApiRoles();
 
-        $choices = [];
+        $choicesAdminRoles = $choicesApiRoles =[];
 
-        foreach ($adminRoles['routes'] as $roles){
-            $choices[] = [ $roles['routerName'] => $roles['role'] ];
+        foreach ($adminRoles as $group) {
+            foreach ($group['routes'] as $roles){
+                $choicesAdminRoles[] = [ $roles['role'] => $roles['role'] ];
+            }
         }
 
-        dump($adminRoles);
+        foreach ($apiRoles as $group) {
+            foreach ($group['routes'] as $roles){
+                $choicesApiRoles[] = [ $roles['role'] => $roles['role'] ];
+            }
+        }
 
-        //dump('asda');
 
         $form->tab('Geral');
             $form->with('Informações Do Grupo');
@@ -84,11 +90,15 @@ final class GroupAdmin extends AbstractAdmin
             $form->with('Permissões Administrativas');
 
                 $form->add('adminRoles', ChoiceType::class, [
-                    'label' => 'Admin Roles',
+                    'label' => ' ',
                     'required' => false,
                     'multiple' => true,
-                    'choices' => $choices,
                     'expanded'=> false,
+                    'choices' => $choicesAdminRoles,
+                    'attr' => [
+                        'class' => 'div-select-admin-roles',
+                        //'style' => 'display:none;'
+                    ],
                 ]);
 
             $form->end();
@@ -97,10 +107,17 @@ final class GroupAdmin extends AbstractAdmin
         $form->tab('Api');
             $form->with('Permissões Api');
 
-                $form->add('apiRoles', CollectionType::class, [
-                    'label' => 'Api Roles',
-                    'required' => false,
-                ]);
+        $form->add('apiRoles', ChoiceType::class, [
+            'label' => ' ',
+            'required' => false,
+            'multiple' => true,
+            'expanded'=> false,
+            'choices' => $choicesApiRoles,
+            'attr' => [
+                'class' => 'div-select-api-roles',
+                //'style' => 'display:none;'
+            ],
+        ]);
 
             $form->end();
         $form->end();
@@ -128,9 +145,17 @@ final class GroupAdmin extends AbstractAdmin
 
     protected function configureShowFields(ShowMapper $show): void
     {
-        $show->add('name');
-        $show->add('description');
-        $show->add('adminRoles');
-        $show->add('apiRoles');
+        $show->add('name', null,[
+            'label' => 'Nome do Grupo:',
+        ]);
+        $show->add('description', null,[
+            'label' => 'Descrição:',
+        ]);
+        $show->add('adminRoles', null,[
+            'label' => 'Permissões Administrativas:',
+        ]);
+        $show->add('apiRoles', null,[
+            'label' => 'Permissões API:',
+        ]);
     }
 }

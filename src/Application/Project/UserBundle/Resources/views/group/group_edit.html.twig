@@ -1,0 +1,247 @@
+{#
+{% extends '@SonataAdmin/standard_layout.html.twig' %}
+
+{% block sonata_admin_content %}
+    Your content here
+{% endblock %}#}
+
+
+{% extends base_template %}
+
+{% block title %}
+	{% if objectId is not null %}
+		{{ 'title_edit'|trans({'%name%': admin.toString(object)|u.truncate(15, '...') }, 'SonataAdminBundle') }}
+	{% else %}
+		{{ 'title_create'|trans({}, 'SonataAdminBundle')|u.truncate(15, '...') }}
+	{% endif %}
+{% endblock %}
+
+{% block navbar_title %}
+	{% if objectId is not null %}
+		{{ 'title_edit'|trans({'%name%': admin.toString(object)|u.truncate(100, '...') }, 'SonataAdminBundle') }}
+	{% else %}
+		{{ 'title_create'|trans({}, 'SonataAdminBundle')|u.truncate(100, '...') }}
+	{% endif %}
+{% endblock %}
+
+{%- block actions -%}
+{% include '@SonataAdmin/CRUD/action_buttons.html.twig' %}{%- endblock -%}{%- block tab_menu -%}{{ knp_menu_render(admin.sidemenu(action), {
+        'currentClass': 'active',
+        'template': get_global_template('tab_menu_template')
+    }, 'twig') }}{%- endblock -%}{% block form %}{#	{{ dump(form) }}#}<div class="sonata-ba-form" id="app">
+<div class="row">
+
+	<div class="col-md-12">
+		<div class="nav-tabs-custom">
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="active">
+					<a href="#1" class="changer-tab" aria-controls="1" data-toggle="tab">
+						<i class="fas fa-exclamation-circle has-errors hide" aria-hidden="true"></i>
+						Geral
+					</a>
+				</li>
+				<li>
+					<a href="#2" class="changer-tab" aria-controls="2" data-toggle="tab">
+						<i class="fas fa-exclamation-circle has-errors hide" aria-hidden="true"></i>
+						Admin
+					</a>
+				</li>
+				<li>
+					<a href="#3" class="changer-tab" aria-controls="3" data-toggle="tab">
+						<i class="fas fa-exclamation-circle has-errors hide" aria-hidden="true"></i>
+						Api
+					</a>
+				</li>
+			</ul>
+			<div
+				class="tab-content">
+
+
+				{# ############################################################################## #}
+				<div class="tab-pane fade" id="1">
+					<div class="box-body  container-fluid">
+						<div class="sonata-ba-collapsed-fields">
+							<div class="row">
+
+								<div class="col-md-12">
+									<div class="box box-primary">
+
+										<div class="box-header">
+											<h4 class="box-title">
+												Informações Do Grupo
+											</h4>
+										</div>
+
+										<div class="box-body">
+
+											<div class="form-group">
+												<label for="name" class="form-label">Nome do Grupo: *
+												</label>
+												<input type="text" name="name" id="name" class="form-control">
+											</div>
+
+
+											<div class="form-group">
+												<label for="description" class="form-label">Descrição:
+												</label>
+												<textarea class="form-control" name="description" id="description" rows="4"></textarea>
+											</div>
+
+
+										</div>
+
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+				{# ############################################################################## #}
+
+
+				{# ############################################################################## #}
+				<div class="tab-pane fade in active" id="2">
+					<div class="box-body  container-fluid">
+						<div class="sonata-ba-collapsed-fields">
+							<div class="row">
+
+
+								<div class="col-md-12">
+									<div class="box box-primary">
+
+										<div class="box-header">
+											<h4 class="box-title">
+												Controle de Acesso Admin
+											</h4>
+										</div>
+
+										<div class="card">
+											<div class="card-body">
+												This is some text within a card body.
+											</div>
+										</div>
+
+										<div class="box-body row">
+											<div class="col-md-3" v-for="adminRole in adminRoles">
+												<div class="" style=" padding:20px;">
+
+													<label class=" control-label">Módulo ${ adminRole['groupName'] }</label>
+													<input type="text" readonly="readonly" class="form-control" :value="adminRole['groupName']">
+													<label class="control-label" style="padding-top: 10px;">Permissões</label>
+
+
+													<div v-for="route in adminRole['routes']">
+														<input @click="choiceAdminRole" class="icheckbox_square-blue roleCheckBox" type="checkbox" :id="route['role']">
+														<span style="margin-left: 5px; margin-right: 5px;" data-trigger="hover" data-toggle="popover" :title="route['routerName']" :data-content="route['description']">
+															<i class="fa fa-solid fa-info-circle"></i>
+														</span>
+														<label @click="choiceAdminRole" class="form-check-label" :for="route['role']">${ route['routerName'] }</label>
+													</div>
+
+												</div>
+											</div>
+										</div>
+
+
+
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+				{# ############################################################################## #}
+
+
+				{# ############################################################################## #}
+				<div class="tab-pane fade" id="3">
+					<div class="box-body  container-fluid">
+						<div class="sonata-ba-collapsed-fields">
+							<div class="row">
+
+								<div class="col-md-12">
+									<div class="box box-primary">
+
+										<div class="box-header">
+											<h4 class="box-title">
+												Controle de Acesso API
+											</h4>
+										</div>
+
+										<div class="box-body"></div>
+
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				{# ############################################################################## #}
+
+
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+<div class="sonata-ba-form-actions well well-small form-actions stuck" style="width: 950px;">
+
+	<button class="btn btn-success" type="submit" name="btn_create_and_edit">
+		<i class="fas fa-save" aria-hidden="true"></i>
+		Criar
+	</button>
+
+	<button type="submit" class="btn btn-success" name="btn_create_and_list">
+		<i class="fas fa-save"></i>
+		<i class="fas fa-list" aria-hidden="true"></i>
+		Criar e retornar para a lista
+	</button>
+
+	<button class="btn btn-success" type="submit" name="btn_create_and_create">
+		<i class="fas fa-plus-circle" aria-hidden="true"></i>
+		Criar e adicionar outro
+	</button>
+
+</div>
+
+
+{#{{ dump(adminRoles) }}#}
+
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+
+<script>
+	$(function () { $('[data-toggle="popover"]').popover() })
+</script>
+
+<script>
+
+	const {createApp} = Vue
+
+var app = createApp({
+data() {
+return {
+adminRolesSelect: [],
+adminRoles: JSON.parse('{{ adminRoles|raw }}')
+}
+},
+methods: {
+choiceAdminRole: function () {
+alert('dsa')
+}
+},
+compilerOptions: {
+delimiters: ["${", "}"]
+}
+})
+
+app.mount('#app')
+</script></div>{% endblock %}

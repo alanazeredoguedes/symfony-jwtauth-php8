@@ -43,6 +43,24 @@ sonata_admin:
     #        form_theme:                 []
     #        filter_theme:               []
 
+    assets:
+        remove_stylesheets:
+        #- bundles/sonataadmin/vendor/admin-lte/dist/css/AdminLTE.min.css
+        #- bundles/sonataadmin/vendor/admin-lte/dist/css/skins/skin-black.min.css
+
+        remove_javascripts:
+        #- bundles/sonataadmin/vendor/admin-lte/dist/js/app.min.js
+        #- bundles/sonataadmin/Admin.js
+        #- bundles/sonatacore/js/base.js
+
+        extra_stylesheets:
+            #- bundles/applicationsonatauser/css/styles.css
+
+        extra_javascripts:
+            - bundles/applicationprojectadmin/js/config-roles.js
+            - bundles/applicationprojectadmin/js/sweetalert2@11.js
+
+
 sonata_block:
     blocks:
         sonata.admin.block.admin_list:
