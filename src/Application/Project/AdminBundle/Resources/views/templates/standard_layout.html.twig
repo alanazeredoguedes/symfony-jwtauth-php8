@@ -208,10 +208,12 @@ file that was distributed with this source code.
 
                                     <li class="user-footer">
                                         <div class="pull-left">
+
                                             <a href="{{ path('admin_project_user_user_show', { id: app.user.id}) }}" class="btn btn-default btn-flat">
                                                 <i class="fa fa-user"></i>
                                                 Perfil
                                             </a>
+
                                         </div>
 
                                         <div class="pull-right">
@@ -295,6 +297,35 @@ file that was distributed with this source code.
                         {% block side_bar_nav %}
                             {{ knp_menu_render('sonata_admin_sidebar', {template: get_global_template('knp_menu_template')}) }}
                         {% endblock side_bar_nav %}
+
+                        {#<ul class="sidebar-menu tree" data-widget="tree">
+
+                            <li class="first treeview">
+                                <a href="#">
+                                    <i class="fa fa-solid fa-user" aria-hidden="true"></i>
+                                    <span>Autenticação</span>
+                                    <span class="pull-right-container"><i class="fas pull-right fa-angle-left"></i></span>
+                                </a>
+                                <ul class="active treeview-menu menu_level_1">
+                                    <li class="first">
+                                        <a href="{{ path('admin_project_user_user_list') }}">
+                                            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                                            Usuario
+                                        </a>
+                                    </li>
+                                    <li class="last">
+                                        <a href="{{ path('admin_project_user_group_list') }}">
+                                            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                                            Grupo
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>#}
+
+
+
 
                         <script>
                             // Remover Items do menu via js ou refatorar o metodo acima ...

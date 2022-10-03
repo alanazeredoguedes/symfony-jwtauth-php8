@@ -17,22 +17,23 @@ security:
 
     firewalls:
 
-        login: # API LOGIN
-            pattern: ^/api/login
-            stateless: true
-            provider: app_user_provider
-            json_login:
-                check_path: /api/login_check
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
-                username_path: email
-                password_path: password
+#        login: # API LOGIN
+#            pattern: ^/api/login
+#            stateless: true
+#            provider: app_user_provider
+#            json_login:
+#                check_path: /api/login_check
+#                success_handler: lexik_jwt_authentication.handler.authentication_success
+#                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+#                username_path: email
+#                password_path: password
 
         api: # API
             provider: app_user_provider
             pattern: ^/api
             stateless: true
             jwt: ~
+            access_denied_handler: App\Application\Project\UserBundle\Security\ApiAccessDeniedHandler
 
 #        dev:
 #            pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -43,6 +44,7 @@ security:
             lazy: true
             provider: app_user_provider
             custom_authenticator: App\Application\Project\UserBundle\Security\UserAuthenticator
+            access_denied_handler: App\Application\Project\UserBundle\Security\AdminAccessDeniedHandler
             logout:
                 path: admin_project_user_user_logout
 

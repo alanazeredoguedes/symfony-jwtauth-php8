@@ -3,6 +3,7 @@
 namespace App\Application\Project\UserBundle\Entity;
 
 use App\Application\Project\UserBundle\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,6 +32,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     #[OA\Property(writeOnly: true)]
     private ?string $password = null;
+
+
+    #[ORM\ManyToMany(targetEntity: "App\Application\Project\UserBundle\Entity\Group")]
+    #[ORM\JoinTable(name: "user_group")]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
+    #[ORM\InverseJoinColumn(name: "group_id", referencedColumnName: "id")]
+    private $groups;
+
+
+    public function __construct()
+    {
+        $this->groups = new ArrayCollection();
+    }
+
+    /**
+     * Criar Roles direta para os usuarios
+     */
+
+    /**
+     * Criar Relacionamento de usuario com grupo
+     */
+
 
     public function getId(): ?int
     {
@@ -80,7 +103,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        foreach ($this->getGroups() as $group) {
+            $roles = array_merge( $roles, $group->getAdminRoles(), $group->getApiRoles() );
+        }
+
+        return array_unique(array_values(array_filter($roles)));
     }
 
     public function setRoles(array $roles): self
@@ -113,4 +140,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    public function setGroups($groups)
+    {
+        $this->groups = $groups;
+    }
+
+
+
 }

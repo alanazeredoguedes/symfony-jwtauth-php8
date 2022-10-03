@@ -2,116 +2,58 @@
 
 namespace App\Application\Project\UserBundle\Controller;
 
-use App\Application\Project\AdminBundle\Attributes\AuthRouterRegister;
-use App\Application\Project\AdminBundle\Controller\CRUDBaseController;
+use App\Application\Project\AdminBundle\Attributes\ARR;
+use App\Application\Project\AdminBundle\Controller\DefaultCRUDController;
 use App\Application\Project\AdminBundle\Service\RolesIdentifierService;
-use Laminas\Code\Reflection\ClassReflection;
-use Laminas\Code\Reflection\FunctionReflection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use ReflectionException;
 use Sonata\AdminBundle\Controller\CRUDController;
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
-use Sonata\AdminBundle\Exception\ModelManagerException;
-use Sonata\AdminBundle\Exception\ModelManagerThrowable;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-
-#[AuthRouterRegister(groupName: 'Grupo', description: 'Permissões do modulo Grupo')]
-class GroupAdminController extends CRUDController
+#[ARR(groupName: 'Grupo', description: 'Permissões do modulo Grupo')]
+class GroupAdminController extends DefaultCRUDController
 {
+
+    #[ARR(routerName: 'listAction', role: "ROLE_ADMIN_GROUP_LIST", title: 'Listar', description: 'Lista todos os grupos')]
+    protected string $listAction = "ROLE_ADMIN_GROUP_LIST";
+
+    #[ARR(routerName: 'showAction', role: "ROLE_ADMIN_GROUP_SHOW", title: 'Visualizar')]
+    protected string $showAction = "ROLE_ADMIN_GROUP_SHOW";
+
+    #[ARR(routerName: 'createAction', role: "ROLE_ADMIN_GROUP_CREATE", title: 'Criar')]
+    protected string $createAction = "ROLE_ADMIN_GROUP_CREATE";
+
+    #[ARR(routerName: 'editAction', role: "ROLE_ADMIN_GROUP_EDIT", title: 'Editar')]
+    protected string $editAction  = "";
+
+    #[ARR(routerName: 'deleteAction', role: "ROLE_ADMIN_GROUP_DELETE", title: 'Excluir')]
+    protected string $deleteAction = "ROLE_ADMIN_GROUP_DELETE";
+
+    #[ARR(routerName: 'batchAction', role: "ROLE_ADMIN_GROUP_BATCH", title: 'Excluir em Lote')]
+    protected string $batchAction = "ROLE_ADMIN_GROUP_BATCH";
+
+    #[ARR(routerName: 'exportAction', role: "ROLE_ADMIN_GROUP_EXPORT", title: 'Exportar')]
+    protected string $exportAction = "ROLE_ADMIN_GROUP_EXPORT";
+
+    #[ARR(routerName: 'historyAction', role: "ROLE_ADMIN_GROUP_HISTORY", title: 'Auditoria')]
+    protected string $historyAction = "ROLE_ADMIN_GROUP_AUDIT";
+
     private RolesIdentifierService $rolesIdentifierService;
+
 
     public function __construct(RolesIdentifierService $rolesIdentifierService)
     {
         $this->rolesIdentifierService = $rolesIdentifierService;
     }
 
-    ##[IsGranted(data: "ROLE_ADMIN_GROUP_LIST")]
-    #[AuthRouterRegister(routerName: 'Listar', role: "ROLE_ADMIN_GROUP_LIST", description: 'Lista todos os grupos do cadastrados.')]
-    public function listAction(Request $request): Response
+    /** @throws ReflectionException */
+    public function listAllRolesAction(): JsonResponse
     {
-        return parent::listAction($request);
-    }
+        /** Access Control Validate */
+        //$this->denyAccessUnlessGranted($this->listAction);
 
-    ##[IsGranted("ROLE_ADMIN_GROUP_SHOW")]
-    #[AuthRouterRegister(routerName: 'Visualizar', role: "ROLE_ADMIN_GROUP_SHOW", description: '...')]
-    public function showAction(Request $request): Response
-    {
-        return parent::showAction($request);
-    }
-
-    #[AuthRouterRegister(routerName: 'Criar', role: "ROLE_ADMIN_GROUP_CREATE", description: '...')]
-    ##[IsGranted(data: "ROLE_ADMIN_GROUP_CREATE")]
-    public function createAction(Request $request): Response
-    {
-        return parent::createAction($request);
-    }
-
-    #[AuthRouterRegister(routerName: 'Editar', role: "ROLE_ADMIN_GROUP_EDIT", description: '...')]
-    ##[IsGranted(data: "ROLE_ADMIN_GROUP_EDIT")]
-    public function editAction(Request $request): Response
-    {
-        return parent::editAction($request);
-    }
-
-    #[AuthRouterRegister(routerName: 'Excluir', role: "ROLE_ADMIN_GROUP_DELETE", description: '...')]
-    ##[IsGranted(data: "ROLE_ADMIN_GROUP_DELETE")]
-    public function deleteAction(Request $request): Response
-    {
-        return parent::deleteAction($request);
-    }
-
-    #[AuthRouterRegister(routerName: 'Excluir em Lote', role: "ROLE_ADMIN_GROUP_BATCH", description: '...')]
-    ##[IsGranted(data: "ROLE_ADMIN_GROUP_DELETE")]
-    public function batchAction(Request $request): Response
-    {
-        return parent::batchAction($request);
-    }
-
-    ##[IsGranted(data: "ROLE_ADMIN_GROUP_DELETE")]
-    public function batchActionDelete(ProxyQueryInterface $query): Response
-    {
-        return parent::batchActionDelete($query);
-    }
-
-    #[AuthRouterRegister(routerName: 'Exportar', role: "ROLE_ADMIN_GROUP_EXPORT", description: '...')]
-    ##[IsGranted(data: "ROLE_ADMIN_GROUP_EXPORT")]
-    public function exportAction(Request $request): Response
-    {
-        return parent::exportAction($request);
-    }
-
-    #[AuthRouterRegister(routerName: 'Auditoria', role: "ROLE_ADMIN_GROUP_AUDIT", description: '...')]
-    ##[IsGranted(data: "ROLE_ADMIN_GROUP_AUDIT")]
-    public function historyAction(Request $request): Response
-    {
-        return parent::historyAction($request);
-    }
-
-    ##[IsGranted(data: "ROLE_ADMIN_GROUP_AUDIT")]
-    public function historyViewRevisionAction(Request $request, string $revision): Response
-    {
-        return parent::historyViewRevisionAction($request, $revision);
-    }
-
-    ##[IsGranted(data: "ROLE_ADMIN_GROUP_AUDIT")]
-    public function historyCompareRevisionsAction(Request $request, string $baseRevision, string $compareRevision): Response
-    {
-        return parent::historyCompareRevisionsAction($request, $baseRevision, $compareRevision);
-    }
-
-
-    public function listAllRolesAction()
-    {
-        $adminRoles = $this->rolesIdentifierService->getAdminRoles();
-        $apiRoles = $this->rolesIdentifierService->getApiRoles();
-
-        $data = [
-            'adminRoles' => $adminRoles,
-            'apiRoles' => $apiRoles,
-        ];
-        return $this->json($data);
+        return $this->json($this->rolesIdentifierService->getAllGroupRoles());
     }
 
 

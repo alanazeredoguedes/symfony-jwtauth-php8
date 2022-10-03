@@ -53,7 +53,8 @@ const initChanges = (roles)=> {
     let selectApi = $('.div-select-api-roles')
 
     /** Oculta Div Select*/
-    //select.parent().css('display', 'none')
+    selectAdmin.parent().css('display', 'none')
+    selectApi.parent().css('display', 'none')
 
     let adminTemplate = '';
     let apiTemplate = '';
@@ -66,13 +67,8 @@ const initChanges = (roles)=> {
         apiTemplate += generateTemplate(value)
     })
 
-    selectAdmin.parent().parent().append( "<div class='box-body row'>" + adminTemplate + "</div>" )
-    selectApi.parent().parent().append( "<div class='box-body row'>" + apiTemplate + "</div>" )
-
-
-
-
-
+    selectAdmin.parent().parent().append( "<div class='box-body row' style='margin-top: -40px;'>" + adminTemplate + "</div>" )
+    selectApi.parent().parent().append( "<div class='box-body row' style='margin-top: -40px;'>" + apiTemplate + "</div>" )
 
     /** Registra alterações dos inputs no select */
     $('.roleCheckBox').on("click", function () {
@@ -157,9 +153,9 @@ const generateTemplate = (group) => {
         routes += `
     <div>
         <input class="icheckbox_square-blue roleCheckBox" type="checkbox" id="${ route['role'] }">
-        <span data-trigger="hover" data-toggle="popover" title="${ route['routerName'] }" data-content="${ route['description'] }" style="margin-left: 5px; margin-right: 5px;">
+        <span data-trigger="hover" data-toggle="popover" title="${ route['title'] }" data-content="${ route['description'] }" style="margin-left: 5px; margin-right: 5px;">
             <i class="fa fa-solid fa-info-circle"></i>
-            <label class="form-check-label" for="${ route['role'] }">${ route['routerName'] }</label>
+            <label class="form-check-label" for="${ route['role'] }">${ route['title'] }</label>
         </span>
     </div>
 `

@@ -79,7 +79,7 @@ class Group
         // guarantee every user at least has ROLE_USER
         $roles[] = '';
 
-        return array_unique($roles);
+        return array_unique(array_values(array_filter($roles)));
     }
 
     /**
@@ -99,7 +99,7 @@ class Group
         // guarantee every user at least has ROLE_USER
         $roles[] = '';
 
-        return array_unique($roles);
+        return array_unique(array_values(array_filter($roles)));
     }
 
     /**

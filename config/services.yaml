@@ -21,7 +21,18 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+#    app.menu_listener:
+#        class: App\Application\Project\AdminBundle\EventListener\MenuBuilderListener
+#        tags:
+#            - { name: kernel.event_listener, event: sonata.admin.event.configure.menu.sidebar, method: addMenuItems }
+#        arguments:
     # Project Services
+
+#    admin.custom:
+#        class: App\Admin\CustomAdmin
+#        tags:
+#            - { name: sonata.admin, model_class: App\Entity\Custom, manager_type: orm, label: Category, security_handler: App\Application\Project\AdminBundle\Security\Handler }
+
 
 
     app.controller.user:
@@ -32,14 +43,15 @@ services:
     admin.user:
         class: App\Application\Project\UserBundle\Admin\UserAdmin
         #arguments: [ ~ , App\Application\Project\UserBundle\Entity\User, App\Application\Project\UserBundle\Controller\UserAdminController ]
+        #arguments: [ App\Application\Project\AdminBundle\Service , '@security.user_authenticator' ]
         tags:
             #- { name: sonata.admin, manager_type: orm, group: "Autenticação", label: User, on_top: false, icon: 'fa fa-solid fa-user' }
-            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\User, controller: App\Application\Project\UserBundle\Controller\UserAdminController, group: "Autenticação", label: Usuario, on_top: false, icon: 'fa fa-solid fa-user' }
+            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\User, controller: App\Application\Project\UserBundle\Controller\UserAdminController, group: "Autenticação", label: Usuario, on_top: false, icon: 'fa fa-solid fa-user', show_in_dashboard: true  }
 
     admin.group:
         class: App\Application\Project\UserBundle\Admin\GroupAdmin
         tags:
-            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\Group, controller: App\Application\Project\UserBundle\Controller\GroupAdminController, group: "Autenticação", label: Grupo, on_top: false, icon: 'fa fa-solid fa-user' }
+            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\Group, controller: App\Application\Project\UserBundle\Controller\GroupAdminController, group: "Autenticação", label: Grupo, on_top: false, icon: 'fa fa-solid fa-user', show_in_dashboard: true }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -47,4 +59,4 @@ services:
     app.documento:
         class: App\Admin\DocumentoAdmin
         tags:
-            - { name: sonata.admin, manager_type: orm, model_class: App\Entity\Documento, group: "Documentos", label: Documento, on_top: false, icon: 'fa fa-solid fa-user' }
+            - { name: sonata.admin, manager_type: orm, model_class: App\Entity\Documento, group: "Documentos", label: Documento, on_top: false, icon: 'fa fa-solid fa-user', show_in_dashboard: true }

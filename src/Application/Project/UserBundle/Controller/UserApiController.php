@@ -2,7 +2,7 @@
 
 namespace App\Application\Project\UserBundle\Controller;
 
-use App\Application\Project\AdminBundle\Attributes\AuthRouterRegister;
+use App\Application\Project\AdminBundle\Attributes\ARR;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Application\Project\UserBundle\Entity\User;
@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 ##[IsGranted('IS_AUTHENTICATED_FULLY')]
-#[AuthRouterRegister(groupName: 'Usuarios', description: 'Permissões Api do modulo de Usuarios')]
+#[ARR(groupName: 'Usuarios', description: 'Permissões Api do modulo de Usuarios')]
 #[Route('/api', name: 'api_')]
 class UserApiController extends AbstractController
 {
@@ -29,12 +29,13 @@ class UserApiController extends AbstractController
     }
 
 
+
     #[OA\Tag(name: 'Authentication')]
     #[OA\Response(
         response: 200,
         description: 'Return list of users',
     )]
-    #[Route('/login', name: 'api_user_login', methods: ['POST'])]
+    #[Route('/login', name: 'user_login', methods: ['POST'])]
     public function loginAction(ManagerRegistry $doctrine, Request $request): JsonResponse
     {
         $entityManager = $doctrine->getManager();
@@ -54,10 +55,10 @@ class UserApiController extends AbstractController
         content: new OA\JsonContent(ref: new Model(type: User::class))
     )]
     ##[OA\RequestBody()]
-    ##[IsGranted('IS_AUTHENTICATED_FULLY')]
-    ##[IsGranted('ROLE_API_LIST')]
-    #[Route('/user', name: 'api_user_list', methods: ['GET'])]
-    #[AuthRouterRegister(routerName: 'Listar', role: "ROLE_API_USER_LIST", description: 'Lista todos os usuarios do cadastrados.')]
+    #[Route('/user', name: 'user_list', methods: ['GET'])]
+
+    #[ARR(routerName: 'listAction', role: "ROLE_API_USER_LIST", title: 'Listar')]
+    #[IsGranted('ROLE_API_USER_LIST')]
     public function listAction(ManagerRegistry $doctrine): Response
     {
         #$this->denyAccessUnlessGranted('ROLE_API_DASHBOARDS');
@@ -79,14 +80,15 @@ class UserApiController extends AbstractController
     }
 
     #[OA\Tag(name: 'user')]
-    #[Route('/user', name: 'api_user_create', methods: ['POST'])]
+    #[Route('/user', name: 'user_create', methods: ['POST'])]
     #[OA\Response(
         response: 200,
         description: 'Create a new User',
         content: new Model(type: User::class)
     )]
     #[OA\RequestBody()]
-    #[AuthRouterRegister(routerName: 'Criar', role: "ROLE_API_USER_CREATE", description: 'Cria um novo usuario.')]
+    #[IsGranted('ROLE_API_USER_CREATE')]
+    #[ARR(routerName: 'createAction', role: "ROLE_API_USER_CREATE", title: 'Criar')]
     public function createAction(ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $entityManager = $doctrine->getManager();
@@ -109,8 +111,9 @@ class UserApiController extends AbstractController
     }
 
     #[OA\Tag(name: 'user')]
-    #[Route('/user/{id}', name: 'api_user_show', methods: ['GET'])]
-    #[AuthRouterRegister(routerName: 'Visualizar', role: "ROLE_API_USER_SHOW", description: 'Exibe as informações de um usuario.')]
+    #[Route('/user/{id}', name: 'user_show', methods: ['GET'])]
+    #[IsGranted('ROLE_API_USER_SHOW')]
+    #[ARR(routerName: 'showAction', role: "ROLE_API_USER_SHOW", title: 'Visualizar')]
     public function showAction(ManagerRegistry $doctrine, int $id): Response
     {
         $user = $doctrine->getRepository(User::class)->find($id);
@@ -131,8 +134,9 @@ class UserApiController extends AbstractController
 
 
     #[OA\Tag(name: 'user')]
-    #[Route('/user/{id}', name: 'api_user_edit', methods: ['PUT'])]
-    #[AuthRouterRegister(routerName: 'Editar', role: "ROLE_API_USER_EDIT", description: 'Edita as informações de um usuario.')]
+    #[Route('/user/{id}', name: 'user_edit', methods: ['PUT'])]
+    #[IsGranted('ROLE_API_USER_EDIT')]
+    #[ARR(routerName: 'editAction', role: "ROLE_API_USER_EDIT", title: 'Editar')]
     public function editAction(ManagerRegistry $doctrine, Request $request, int $id): Response
     {
         $entityManager = $doctrine->getManager();
@@ -164,8 +168,9 @@ class UserApiController extends AbstractController
 
 
     #[OA\Tag(name: 'user')]
-    #[Route('/user/{id}', name: 'api_user_delete', methods: ['DELETE'])]
-    #[AuthRouterRegister(routerName: 'Deletar', role: "ROLE_API_USER_DELETE", description: 'Deleta as informações de um usuario.')]
+    #[Route('/user/{id}', name: 'user_delete', methods: ['DELETE'])]
+    #[IsGranted('ROLE_API_USER_DELETE')]
+    #[ARR(routerName: 'deleteAction', role: "ROLE_API_USER_DELETE", title: 'Deletar')]
     public function deleteAction(ManagerRegistry $doctrine, int $id): Response
     {
         $entityManager = $doctrine->getManager();

@@ -3,149 +3,201 @@
 namespace App\Application\Project\AdminBundle\Service;
 
 use Laminas\Code\Reflection\ClassReflection;
+use ReflectionClass;
+use ReflectionException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RolesIdentifierService extends AbstractController
 {
-    private string $authRouterRegister = "App\Application\Project\AdminBundle\Attributes\AuthRouterRegister";
+    private string $authRouterRegister = "App\Application\Project\AdminBundle\Attributes\ARR";
 
-    public function __construct()
+    public function __construct(){}
+
+    /** @throws ReflectionException */
+    public function getAdminGroupRoles(): array
     {
-        //dump('dsa');
-
+        return $this->getGroupRoles('AdminController');
     }
 
-    public function getAllRoles(){
+    /** @throws ReflectionException */
+    public function getAdminRoles(): array
+    {
+        $routes = [];
 
+        foreach ($this->getAdminGroupRoles() as $group) {
+            $routes = array_merge($routes, $group['routes']);
+        }
+        return $routes;
+    }
 
-//        $ref = new \ReflectionClass('App\Controller\HomeController');
-//        dump($ref);
+    /** @throws ReflectionException */
+    public function getApiGroupRoles(): array
+    {
+        return $this->getGroupRoles('ApiController');
+    }
 
-        $adminControllers = $this->getControllerPath('AdminController');
-        $apiControllers = $this->getControllerPath('ApiController');
-        $allControllers = array_merge($adminControllers, $apiControllers);
+    /** @throws ReflectionException */
+    public function getApiRoles(): array
+    {
+        $routes = [];
 
-        //dump($allControllers);
+        foreach ($this->getApiGroupRoles() as $group) {
+            $routes = array_merge($routes, $group['routes']);
+        }
+        return $routes;
+    }
 
-
-
+    /** @throws ReflectionException */
+    public function getAllGroupRoles(): array
+    {
+        return [
+            'adminRoles' => $this->getGroupRoles('AdminController'),
+            'apiRoles' => $this->getGroupRoles('ApiController'),
+        ];
     }
 
 
-    public function getAdminRoles(){
-        $adminControllers = $this->getControllerPath('AdminController');
+    /** @throws ReflectionException */
+    public function getAllRoles(): array
+    {
+
+        $adminRoles = $this->getAdminRoles();
+        $apiRoles = $this->getApiRoles();
+
+        return array_merge($adminRoles, $apiRoles);
+    }
+
+    /** @throws ReflectionException */
+    public function getAllRolesByController($controllerName): array
+    {
+        $controllerName = explode('\\', $controllerName);
+
+        $routes = $this->getGroupRoles(end($controllerName) );
+
+        return $routes[0]['routes'];
+    }
 
 
+    /** @throws ReflectionException */
+    public function getAllRolesClean(): array
+    {
 
-        $allData = [];
+        $adminRoles = $this->getAdminRoles();
+        $apiRoles = $this->getApiRoles();
+        $allRolesGroup = array_merge($adminRoles, $apiRoles);
 
-        foreach ($adminControllers as $adminController){
-
-            $config = [];
-
-            $reflection = new \ReflectionClass($adminController);
-            $attributes = $reflection->getAttributes();
-
-
-            foreach ($attributes as $attribute) {
-                if($attribute->getName() === $this->authRouterRegister){
-
-                    $config['groupName'] = $attribute->getArguments()['groupName'];
-                    $config['description'] = $attribute->getArguments()['description'];
-
-                    foreach ($reflection->getMethods() as $method) {
-                        $router = [];
-                        if(!str_contains($method->name, 'Action'))
-                            continue;
-
-                        foreach ($method->getAttributes() as $attribute) {
-                            if($attribute->getName() === $this->authRouterRegister){
-
-                                $args = $attribute->getArguments();
-
-                                $router['routerName'] = ( isset( $args['routerName'] ) )? $args['routerName'] : false;
-                                $router['description'] = ( isset( $args['description'] ) )? $args['description'] : false;
-                                $router['role'] = ( isset( $args['role'] ) )? $args['role'] : false;
-
-                                if($router['routerName'] && $router['role'])
-                                    $config['routes'][] = $router;
-
-                                break;
-                            }
-                        }
-                    }
-
-                    $allData[] = $config;
-
-                    break;
-                }
-            }
-
+        $roles = [];
+        foreach ($allRolesGroup as $roleGroup) {
+            $roles[] =  $roleGroup['role'];
         }
 
-        //dd($config);
-        return $allData;
+        return $roles;
     }
 
 
 
 
 
+    /** @throws ReflectionException */
+    private function getGroupRoles(string $controllerPrefix): array
+    {
+        $adminControllers = $this->getControllerPath($controllerPrefix);
 
 
+        $groups = [];
 
-    public function getApiRoles(){
-        $adminControllers = $this->getControllerPath('ApiController');
+        /** Percorre Todas as Controladoras */
+        foreach ($adminControllers as $adminController) {
 
-        $allData = [];
+            $reflection = new ReflectionClass($adminController);
+            $classAttributes = $reflection->getAttributes();
 
-        foreach ($adminControllers as $adminController){
-
-            $config = [];
-
-            $reflection = new \ReflectionClass($adminController);
-            $attributes = $reflection->getAttributes();
+            $group = $this->getAttributesARR($classAttributes);
+            if( ($group === false) || empty($group['groupName']) )
+                continue;
 
 
-            foreach ($attributes as $attribute) {
-                if($attribute->getName() === $this->authRouterRegister){
+            /** Percorre Todas as Properties das Classes */
+            foreach ($reflection->getProperties() as $method) {
 
-                    $config['groupName'] = $attribute->getArguments()['groupName'];
-                    $config['description'] = $attribute->getArguments()['description'];
+                $methodAttributes = $method->getAttributes();
+                $router = $this->getAttributesARR($methodAttributes);
+                if( ($router === false) || empty($router['routerName']) || empty($router['role']) )
+                    continue;
 
-                    foreach ($reflection->getMethods() as $method) {
-                        $router = [];
-                        if(!str_contains($method->name, 'Action'))
-                            continue;
-
-                        foreach ($method->getAttributes() as $attribute) {
-                            if($attribute->getName() === $this->authRouterRegister){
-
-                                $args = $attribute->getArguments();
-
-                                $router['routerName'] = ( isset( $args['routerName'] ) )? $args['routerName'] : false;
-                                $router['description'] = ( isset( $args['description'] ) )? $args['description'] : false;
-                                $router['role'] = ( isset( $args['role'] ) )? $args['role'] : false;
-
-                                if($router['routerName'] && $router['role'])
-                                    $config['routes'][] = $router;
-
-                                break;
-                            }
-                        }
-                    }
-
-                    $allData[] = $config;
-
-                    break;
-                }
+                $group['routes'][] = $router;
             }
 
+            /** Percorre Todas os Methods da Classe */
+            foreach ($reflection->getMethods() as $method) {
+
+                $methodAttributes = $method->getAttributes();
+                $router = $this->getAttributesARR($methodAttributes);
+                if( ($router === false) || empty($router['routerName']) || empty($router['role']) )
+                    continue;
+
+                $group['routes'][] = $router;
+            }
+
+
+
+
+            $groups[] = $group;
         }
 
-        //dd($config);
-        return $allData;
+
+            return $groups;
     }
+
+
+    public function getAttributesARR($attributes): bool|array
+    {
+        $config = [];
+
+        foreach ($attributes as $attribute) {
+            if($attribute->getName() === $this->authRouterRegister){
+
+                $args = $attribute->getArguments();
+
+                if( isset($args['routerName']) )
+                    $config['routerName'] = $args['routerName'];
+
+                if( isset($args['role']) )
+                    $config['role'] = $args['role'];
+
+                if( isset($args['title']) )
+                    $config['title'] = $args['title'];
+
+                if( isset($args['groupName']) )
+                    $config['groupName'] = $args['groupName'];
+
+
+                if( isset($args['description']) )
+                    $config['description'] = $args['description'];
+
+                return $config;
+            }
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -164,7 +216,7 @@ class RolesIdentifierService extends AbstractController
         $controllers = [];
         foreach ($bundles as $bundle) {
             //dump($bundle);
-            $reflection = new \ReflectionClass($bundle);// "App\Application\Project\AdminBundle\ApplicationProjectAdminBundle"
+            $reflection = new ReflectionClass($bundle);// "App\Application\Project\AdminBundle\ApplicationProjectAdminBundle"
             $controllerDirectory = dirname($reflection->getFileName()) . '/Controller';
             if (file_exists($controllerDirectory)) {
                 $d = dir($controllerDirectory);
