@@ -21,18 +21,8 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-#    app.menu_listener:
-#        class: App\Application\Project\AdminBundle\EventListener\MenuBuilderListener
-#        tags:
-#            - { name: kernel.event_listener, event: sonata.admin.event.configure.menu.sidebar, method: addMenuItems }
-#        arguments:
-    # Project Services
-
-#    admin.custom:
-#        class: App\Admin\CustomAdmin
-#        tags:
-#            - { name: sonata.admin, model_class: App\Entity\Custom, manager_type: orm, label: Category, security_handler: App\Application\Project\AdminBundle\Security\Handler }
-
+    # ####################################################################################
+    # injeções de dependências
 
 
     app.controller.user:
@@ -40,21 +30,55 @@ services:
         arguments:
             - '@lexik_jwt_authentication.jwt_manager'
 
-    admin.user:
+    #    app.menu_listener:
+    #        class: App\Application\Project\AdminBundle\EventListener\MenuBuilderListener
+    #        tags:
+    #            - { name: kernel.event_listener, event: sonata.admin.event.configure.menu.sidebar, method: addMenuItems }
+    #        arguments:
+    # Project Services
+
+    #    admin.custom:
+    #        class: App\Admin\CustomAdmin
+    #        tags:
+    #            - { name: sonata.admin, model_class: App\Entity\Custom, manager_type: orm, label: Category, security_handler: App\Application\Project\AdminBundle\Security\Handler }
+
+
+
+
+
+    # ####################################################################################
+    # serviços padrões da estrutura do projeto
+
+    bundle.project.content:
+        class: App\Application\Project\ContentBundle\Admin\ContentAdmin
+        arguments: [ ~ , App\Application\Project\ContentBundle\Entity\Content, App\Application\Project\ContentBundle\Controller\ContentAdminController ]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: User, on_top: false, icon: 'fa fa-solid fa-user',, show_in_dashboard: false }
+
+    bundle.project.user.user:
         class: App\Application\Project\UserBundle\Admin\UserAdmin
-        #arguments: [ ~ , App\Application\Project\UserBundle\Entity\User, App\Application\Project\UserBundle\Controller\UserAdminController ]
-        #arguments: [ App\Application\Project\AdminBundle\Service , '@security.user_authenticator' ]
+        arguments: [ ~ , App\Application\Project\UserBundle\Entity\User, App\Application\Project\UserBundle\Controller\UserAdminController ]
         tags:
             #- { name: sonata.admin, manager_type: orm, group: "Autenticação", label: User, on_top: false, icon: 'fa fa-solid fa-user' }
-            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\User, controller: App\Application\Project\UserBundle\Controller\UserAdminController, group: "Autenticação", label: Usuario, on_top: false, icon: 'fa fa-solid fa-user', show_in_dashboard: true  }
+            - { name: sonata.admin, manager_type: orm, group: "Autenticação", label: Usuario, on_top: false, icon: 'fa fa-solid fa-user', show_in_dashboard: true  }
 
-    admin.group:
+    admin.project.user.group:
         class: App\Application\Project\UserBundle\Admin\GroupAdmin
+        #arguments: [ ~ , App\Application\Project\UserBundle\Entity\Group, App\Application\Project\UserBundle\Controller\GroupAdminController ]
         tags:
             - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\Group, controller: App\Application\Project\UserBundle\Controller\GroupAdminController, group: "Autenticação", label: Grupo, on_top: false, icon: 'fa fa-solid fa-user', show_in_dashboard: true }
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    # ####################################################################################
+    # por favor, note que as últimas definições sao da estrutura padrão do projeto
+    # adicione mais definições de serviço quando for necessária abaixo
+
+
+
+
+
+
+
+
 
     app.documento:
         class: App\Admin\DocumentoAdmin

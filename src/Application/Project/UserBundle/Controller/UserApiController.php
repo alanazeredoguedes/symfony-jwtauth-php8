@@ -2,7 +2,7 @@
 
 namespace App\Application\Project\UserBundle\Controller;
 
-use App\Application\Project\AdminBundle\Attributes\ARR;
+use App\Application\Project\ContentBundle\Attributes\ARR;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Application\Project\UserBundle\Entity\User;

@@ -1,0 +1,79 @@
+{% extends '@SonataAdmin/standard_layout.html.twig' %}
+
+{% block sonata_admin_content %}
+
+    <style>
+        .div-content {
+            font-family: 'Raleway', sans-serif;
+            /*background-color: #342643;*/
+            height: 100%;
+            padding: 10px;
+        }
+
+        .text-wrapper {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title {
+            font-size: 5em;
+            font-weight: 700;
+            color: #EE4B5E;
+        }
+        .subtitle {
+            font-size: 40px;
+            font-weight: 700;
+            color: #1FA9D6;
+        }
+        .isi {
+            font-size: 18px;
+            text-align: center;
+            margin:30px;
+            padding:20px;
+            color: black;
+        }
+        .buttons {
+            margin: 30px;
+            font-weight: 700;
+            border: 2px solid #EE4B5E;
+            text-decoration: none;
+            padding: 15px;
+            text-transform: uppercase;
+            color: #EE4B5E;
+            border-radius: 26px;
+            transition: all 0.2s ease-in-out;
+            display: inline-block;
+
+        .buttons:hover {
+            background-color: #EE4B5E;
+            color: white;
+            transition: all 0.2s ease-in-out;
+        }
+
+    </style>
+
+    <div class="div-content text-wrapper text-center" style="margin-top: 5%">
+
+        <div class="title" data-content="404">
+            403 - ACCESSO NEGADO
+        </div>
+
+        <div class="subtitle">
+            Ops, você não tem permissão para acessar esta página.
+        </div>
+        <div class="isi">
+            Um servidor da Web pode retornar um código de status HTTP 403 Proibido em resposta a uma solicitação de um cliente
+            para uma página ou recurso da Web para indicar que o servidor pode ser alcançado e entendido a solicitação, mas
+            se recusa a tomar qualquer outra ação. As respostas do código de status 403 são o resultado da configuração do servidor
+            web para negar acesso, por algum motivo, ao recurso solicitado pelo cliente.
+        </div>
+
+        <div class="buttons">
+            <a class="button" href="{{ path('sonata_admin_dashboard') }}">Pagina Inicial</a>
+        </div>
+    </div>
+
+{% endblock %}

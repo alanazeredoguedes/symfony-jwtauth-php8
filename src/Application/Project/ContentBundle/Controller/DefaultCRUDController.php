@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Application\Project\AdminBundle\Controller;
+namespace App\Application\Project\ContentBundle\Controller;
 
-use App\Application\Project\AdminBundle\Attributes\ARR;
+use App\Application\Project\ContentBundle\Attributes\ARR;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;

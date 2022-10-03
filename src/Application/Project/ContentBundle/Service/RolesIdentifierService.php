@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Project\AdminBundle\Service;
+namespace App\Application\Project\ContentBundle\Service;
 
 use Laminas\Code\Reflection\ClassReflection;
 use ReflectionClass;
@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RolesIdentifierService extends AbstractController
 {
-    private string $authRouterRegister = "App\Application\Project\AdminBundle\Attributes\ARR";
+    private string $authRouterRegister = "App\Application\Project\ContentBundle\Attributes\ARR";
 
     public function __construct(){}
 
@@ -216,7 +216,7 @@ class RolesIdentifierService extends AbstractController
         $controllers = [];
         foreach ($bundles as $bundle) {
             //dump($bundle);
-            $reflection = new ReflectionClass($bundle);// "App\Application\Project\AdminBundle\ApplicationProjectAdminBundle"
+            $reflection = new ReflectionClass($bundle);// "App\Application\Project\AdminBundle\ApplicationProjectContentBundle"
             $controllerDirectory = dirname($reflection->getFileName()) . '/Controller';
             if (file_exists($controllerDirectory)) {
                 $d = dir($controllerDirectory);

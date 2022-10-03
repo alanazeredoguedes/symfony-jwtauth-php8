@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Project\AdminBundle\Attributes;
+namespace App\Application\Project\ContentBundle\Attributes;
 
 /**
  * Auth Router Register

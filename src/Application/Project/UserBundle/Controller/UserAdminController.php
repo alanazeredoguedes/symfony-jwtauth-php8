@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Application\Project\UserBundle\Controller;
-use App\Application\Project\AdminBundle\Attributes\ARR;
-use App\Application\Project\AdminBundle\Controller\DefaultCRUDController;
+use App\Application\Project\ContentBundle\Attributes\ARR;
+use App\Application\Project\ContentBundle\Controller\DefaultCRUDController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 

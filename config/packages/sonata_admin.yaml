@@ -3,15 +3,11 @@ sonata_admin:
     dashboard:
         blocks:
             - { type: sonata.admin.block.admin_list, position: left }
-    security:
-        #handler: App\Application\Project\AdminBundle\Security\Handler\CustomSecurity
-        #handler: app.sonata.admin.security.handler
-        #handler: app.application.adminbundle.security.handler.customsecurityhandler
 
     #default_controller: App\Application\Project\AdminBundle\Controller\DefaultCRUDController
 
     templates:
-        layout: '@ApplicationProjectAdmin/templates/standard_layout.html.twig'
+        layout: '@ApplicationProjectContent/templates/standard_layout.html.twig'
     #        ajax:                       '@SonataAdmin/ajax_layout.html.twig'
     #        list:                       '@SonataAdmin/CRUD/list.html.twig'
     #        show:                       '@SonataAdmin/CRUD/show.html.twig'
@@ -63,9 +59,9 @@ sonata_admin:
             #- bundles/applicationsonatauser/css/styles.css
 
         extra_javascripts:
-            - bundles/applicationprojectadmin/js/config-roles.js
-            - bundles/applicationprojectadmin/js/sweetalert2@11.js
-            - bundles/applicationprojectadmin/js/template_remove.js
+            - bundles/applicationprojectcontent/js/config-roles.js
+            - bundles/applicationprojectcontent/js/sweetalert2@11.js
+            - bundles/applicationprojectcontent/js/template_remove.js
 
 
 sonata_block:

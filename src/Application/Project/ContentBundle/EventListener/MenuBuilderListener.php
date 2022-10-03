@@ -1,5 +1,5 @@
 <?php
-namespace App\Application\Project\AdminBundle\EventListener;
+namespace App\Application\Project\ContentBundle\EventListener;
 
 use Sonata\AdminBundle\Event\ConfigureMenuEvent;
 

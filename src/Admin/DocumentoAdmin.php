@@ -1,7 +1,7 @@
 <?php
 namespace App\Admin;
 
-use App\Application\Project\AdminBundle\Service\RolesIdentifierService;
+use App\Application\Project\ContentBundle\Service\RolesIdentifierService;
 use App\Entity\Documento;
 use Knp\Menu\ItemInterface;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
@@ -53,9 +53,6 @@ final class DocumentoAdmin extends AbstractAdmin
 
     protected function configureListFields(ListMapper $list): void
     {
-        $this->setListMode('list');
-        #unset($this->listModes['mosaic']);
-
         $list->addIdentifier('titulo', null, ['route' => ['name' => 'edit']]);
 
         $list->addIdentifier('subtitulo');

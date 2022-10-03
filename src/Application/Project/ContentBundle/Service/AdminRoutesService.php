@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Project\AdminBundle\Service;
+namespace App\Application\Project\ContentBundle\Service;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -53,7 +53,7 @@ class AdminRoutesService
                 $routesRemove[] = str_replace("Action", "", $systemRole['routerName']);
             }
         }
-        dump($routesRemove);
+        //dump($routesRemove);
 
         return $routesRemove;
     }

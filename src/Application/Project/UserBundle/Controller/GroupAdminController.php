@@ -2,9 +2,9 @@
 
 namespace App\Application\Project\UserBundle\Controller;
 
-use App\Application\Project\AdminBundle\Attributes\ARR;
-use App\Application\Project\AdminBundle\Controller\DefaultCRUDController;
-use App\Application\Project\AdminBundle\Service\RolesIdentifierService;
+use App\Application\Project\ContentBundle\Attributes\ARR;
+use App\Application\Project\ContentBundle\Controller\DefaultCRUDController;
+use App\Application\Project\ContentBundle\Service\RolesIdentifierService;
 use ReflectionException;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\JsonResponse;
