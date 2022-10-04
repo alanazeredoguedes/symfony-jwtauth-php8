@@ -46,15 +46,15 @@ security:
             custom_authenticator: App\Application\Project\UserBundle\Security\UserAuthenticator
             access_denied_handler: App\Application\Project\UserBundle\Security\AdminAccessDeniedHandler
             logout:
-                path: admin_project_user_user_logout
+                path: admin_project_content_content_logout
 
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        #- { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/admin/user/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api,       roles: PUBLIC_ACCESS }
+        - { path: ^/admin/login, roles: PUBLIC_ACCESS }
         - { path: ^/admin/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

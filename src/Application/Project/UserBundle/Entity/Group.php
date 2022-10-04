@@ -70,41 +70,29 @@ class Group
         $this->description = $description;
     }
 
-    /**
-     * @return array
-     */
+    /** @return array */
     public function getAdminRoles(): array
     {
         $roles = $this->adminRoles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = '';
 
         return array_unique(array_values(array_filter($roles)));
     }
 
-    /**
-     * @param array $adminRoles
-     */
+    /** @param array $adminRoles */
     public function setAdminRoles(array $adminRoles): void
     {
         $this->adminRoles = $adminRoles;
     }
 
-    /**
-     * @return array
-     */
+    /** @return array */
     public function getApiRoles(): array
     {
         $roles = $this->apiRoles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = '';
 
         return array_unique(array_values(array_filter($roles)));
     }
 
-    /**
-     * @param array $apiRoles
-     */
+    /** @param array $apiRoles */
     public function setApiRoles(array $apiRoles): void
     {
         $this->apiRoles = $apiRoles;

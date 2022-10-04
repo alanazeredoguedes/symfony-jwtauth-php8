@@ -33,7 +33,7 @@ final class GroupAdmin extends AbstractAdmin
 
     public function toString(object $object): string
     {
-        return $object instanceof Group ? $object->getId() : '';
+        return $object instanceof Group ? $object->getId() . ' - ' . $object->getName() : '';
     }
 
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string

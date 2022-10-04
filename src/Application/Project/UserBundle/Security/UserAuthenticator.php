@@ -19,7 +19,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'admin_project_user_user_login';
+    public const LOGIN_ROUTE = 'admin_project_content_content_login';
 
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {

@@ -25,7 +25,7 @@ class GroupAdminController extends DefaultCRUDController
     protected string $createAction = "ROLE_ADMIN_GROUP_CREATE";
 
     #[ARR(routerName: 'editAction', role: "ROLE_ADMIN_GROUP_EDIT", title: 'Editar')]
-    protected string $editAction  = "";
+    protected string $editAction  = "ROLE_ADMIN_GROUP_EDIT";
 
     #[ARR(routerName: 'deleteAction', role: "ROLE_ADMIN_GROUP_DELETE", title: 'Excluir')]
     protected string $deleteAction = "ROLE_ADMIN_GROUP_DELETE";
@@ -37,7 +37,7 @@ class GroupAdminController extends DefaultCRUDController
     protected string $exportAction = "ROLE_ADMIN_GROUP_EXPORT";
 
     #[ARR(routerName: 'historyAction', role: "ROLE_ADMIN_GROUP_HISTORY", title: 'Auditoria')]
-    protected string $historyAction = "ROLE_ADMIN_GROUP_AUDIT";
+    protected string $historyAction = "ROLE_ADMIN_GROUP_HISTORY";
 
     private RolesIdentifierService $rolesIdentifierService;
 
@@ -55,8 +55,6 @@ class GroupAdminController extends DefaultCRUDController
 
         return $this->json($this->rolesIdentifierService->getAllGroupRoles());
     }
-
-
 
 
 }

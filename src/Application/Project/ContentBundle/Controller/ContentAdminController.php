@@ -10,6 +10,7 @@ use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class ContentAdminController extends DefaultCRUDController
 {
@@ -38,16 +39,29 @@ class ContentAdminController extends DefaultCRUDController
 //    #[ARR(routerName: 'historyAction', role: "ROLE_ADMIN_GROUP_HISTORY", title: 'Auditoria')]
 //    protected string $historyAction = "ROLE_ADMIN_GROUP_AUDIT";
 
-    public function accessDeniedAction(): Response
+
+    /**
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
+     */
+    public function loginAction(AuthenticationUtils $authenticationUtils): Response
     {
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $authenticationUtils->getLastUsername();
 
-        /** Access Control Validate */
-        //$this->denyAccessUnlessGranted($this->listAction);
-
-        return $this->render('@ApplicationProjectContent/error/error_403.html.twig');
+        return $this->render('@ApplicationProjectUser/auth/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
+    public function logoutAction(): void
+    {
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
 
+    /** @return Response */
+    public function accessDeniedAction(): Response
+    {
+        return $this->render('@ApplicationProjectContent/error/error_403.html.twig');
+    }
 
 
 }

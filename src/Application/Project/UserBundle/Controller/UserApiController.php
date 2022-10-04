@@ -3,6 +3,7 @@
 namespace App\Application\Project\UserBundle\Controller;
 
 use App\Application\Project\ContentBundle\Attributes\ARR;
+use App\Application\Project\ContentBundle\Controller\DefaultAbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Application\Project\UserBundle\Entity\User;
@@ -16,11 +17,16 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+
 
 ##[IsGranted('IS_AUTHENTICATED_FULLY')]
-#[ARR(groupName: 'Usuarios', description: 'Permissões Api do modulo de Usuarios')]
+#[ARR(groupName: 'Usuários', description: 'Permissões Api do modulo de Usuários')]
 #[Route('/api', name: 'api_')]
-class UserApiController extends AbstractController
+class UserApiController extends DefaultAbstractController
 {
     private ?JWTTokenManagerInterface $JWTManager = null;
 
@@ -28,18 +34,48 @@ class UserApiController extends AbstractController
         $this->JWTManager = $jwt;
     }
 
-
-
-    #[OA\Tag(name: 'Authentication')]
+    #[OA\Tag(name: 'user')]
     #[OA\Response(
         response: 200,
-        description: 'Return list of users',
+        description: 'Return Token JWT',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'token', description: 'Token JWT', type: 'string', nullable: false),
+            ],
+            type: 'object'
+        )
     )]
-    #[Route('/login', name: 'user_login', methods: ['POST'])]
-    public function loginAction(ManagerRegistry $doctrine, Request $request): JsonResponse
+    #[OA\RequestBody(
+        description: 'Json Payload',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'email', description: 'Email do Usuário', type: 'string', nullable: false),
+                new OA\Property(property: 'password', description: 'Senha do Usuário', type: 'string', nullable: false)
+            ],
+            type: 'object'
+        )
+    )]
+    #[Route('/user/login', name: 'user_login', methods: ['POST'])]
+    public function loginAction(ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $entityManager = $doctrine->getManager();
-        $user = $entityManager->getRepository(User::class)->find(1);
+
+        $parameters = [
+            'email'     => [ 'type' => 'string', 'required' => true, 'nullable' => false ],
+            'password'  => [ 'type' => 'string', 'required' => true, 'nullable' => false ],
+        ];
+
+        $requestBody = json_decode($request->getContent());
+
+        if($this->validateJsonRequestBody($requestBody, $parameters))
+            return $this->validateJsonRequestBody($requestBody, $parameters);
+
+
+
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $requestBody->email]);
+
+        if(!$user || !$passwordHasher->isPasswordValid($user, $requestBody->password))
+            return $this->createResponseStatus(message: 'Invalid access credentials');
 
         $token = $this->JWTManager->create($user);
 
@@ -47,22 +83,70 @@ class UserApiController extends AbstractController
     }
 
 
+    /**
+     * @throws ExceptionInterface
+     */
     #[OA\Tag(name: 'user')]
     #[OA\Response(
         response: 200,
-        description: 'Return list of users',
-        #content: new Model(type: User::class)
-        content: new OA\JsonContent(ref: new Model(type: User::class))
+        description: 'Return authenticated user',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'id', type: 'int'),
+                new OA\Property(property: 'username', type: 'string'),
+                new OA\Property(property: 'email', type: 'string'),
+                new OA\Property(property: 'groups', type: 'object'),
+            ],
+            type: 'object'
+        )
     )]
-    ##[OA\RequestBody()]
-    #[Route('/user', name: 'user_list', methods: ['GET'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Route('/user/authenticated', name: 'user_by_token', methods: ['GET'])]
+    public function userByTokenAction(ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    {
+        $user = $this->getUser();
 
-    #[ARR(routerName: 'listAction', role: "ROLE_API_USER_LIST", title: 'Listar')]
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $data = $serializer->normalize($user, null, [AbstractNormalizer::ATTRIBUTES => [
+            'id',
+            'username',
+            'email',
+            'groups' => ['id', 'name', 'description']
+        ] ]);
+
+        return $this->json($data);
+    }
+
+
+    protected function getListItem($list, $getProperty){
+        $response = [];
+        foreach ($list as $item){
+            $response[] = $item->$$getProperty;
+        }
+        return $response;
+    }
+
+
+
+    #[OA\Tag(name: 'user')]
+    #[OA\Response(
+        response: 200,
+        description: 'Return list of user',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'id', type: 'int'),
+                new OA\Property(property: 'username', type: 'string'),
+                new OA\Property(property: 'email', type: 'string'),
+                new OA\Property(property: 'groups', type: 'object'),
+            ],
+            type: 'object'
+        )
+    )]
     #[IsGranted('ROLE_API_USER_LIST')]
+    #[ARR(routerName: 'listAction', role: "ROLE_API_USER_LIST", title: 'Listar')]
+    #[Route('/user', name: 'user_list', methods: ['GET'])]
     public function listAction(ManagerRegistry $doctrine): Response
     {
-        #$this->denyAccessUnlessGranted('ROLE_API_DASHBOARDS');
-
         $users = $doctrine->getRepository(User::class)->findAll();
 
         $data = [];
@@ -173,6 +257,8 @@ class UserApiController extends AbstractController
     #[ARR(routerName: 'deleteAction', role: "ROLE_API_USER_DELETE", title: 'Deletar')]
     public function deleteAction(ManagerRegistry $doctrine, int $id): Response
     {
+        $this->validateAccess('ROLE_API_USER_DELETE');
+
         $entityManager = $doctrine->getManager();
         $user = $entityManager->getRepository(User::class)->find($id);
 
@@ -185,5 +271,7 @@ class UserApiController extends AbstractController
 
         return $this->json('Deleted a user successfully with id ' . $id);
     }
+
+
 
 }

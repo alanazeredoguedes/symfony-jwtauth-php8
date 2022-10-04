@@ -21,6 +21,17 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+
+
+
+
+    # overload kernel exception
+#    App\Application\Project\ContentBundle\EventListener\ExceptionListener:
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.exception }
+
+
+
     # ####################################################################################
     # injeções de dependências
 
@@ -43,9 +54,6 @@ services:
     #            - { name: sonata.admin, model_class: App\Entity\Custom, manager_type: orm, label: Category, security_handler: App\Application\Project\AdminBundle\Security\Handler }
 
 
-
-
-
     # ####################################################################################
     # serviços padrões da estrutura do projeto
 
@@ -57,16 +65,16 @@ services:
 
     bundle.project.user.user:
         class: App\Application\Project\UserBundle\Admin\UserAdmin
-        arguments: [ ~ , App\Application\Project\UserBundle\Entity\User, App\Application\Project\UserBundle\Controller\UserAdminController ]
+        #arguments: [ ~ , App\Application\Project\UserBundle\Entity\User, App\Application\Project\UserBundle\Controller\UserAdminController ]
         tags:
             #- { name: sonata.admin, manager_type: orm, group: "Autenticação", label: User, on_top: false, icon: 'fa fa-solid fa-user' }
-            - { name: sonata.admin, manager_type: orm, group: "Autenticação", label: Usuario, on_top: false, icon: 'fa fa-solid fa-user', show_in_dashboard: true  }
+            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\User, controller: App\Application\Project\UserBundle\Controller\UserAdminController, group: "Controle de Acesso", label: Usuário, on_top: false, icon: 'fa fa-solid fa-user', show_in_dashboard: true  }
 
     admin.project.user.group:
         class: App\Application\Project\UserBundle\Admin\GroupAdmin
         #arguments: [ ~ , App\Application\Project\UserBundle\Entity\Group, App\Application\Project\UserBundle\Controller\GroupAdminController ]
         tags:
-            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\Group, controller: App\Application\Project\UserBundle\Controller\GroupAdminController, group: "Autenticação", label: Grupo, on_top: false, icon: 'fa fa-solid fa-user', show_in_dashboard: true }
+            - { name: sonata.admin, manager_type: orm, model_class: App\Application\Project\UserBundle\Entity\Group, controller: App\Application\Project\UserBundle\Controller\GroupAdminController, group: "Controle de Acesso", label: Grupo, on_top: false, icon: 'fa fa-solid fa-user', show_in_dashboard: true }
 
     # ####################################################################################
     # por favor, note que as últimas definições sao da estrutura padrão do projeto

@@ -31,20 +31,7 @@ class UserAdminController extends DefaultCRUDController
     protected string $exportAction = "ROLE_ADMIN_USER_EXPORT";
 
     #[ARR(routerName: 'historyAction', role: "ROLE_ADMIN_USER_HISTORY", title: 'Auditoria')]
-    protected string $historyAction = "ROLE_ADMIN_USER_AUDIT";
-
-    public function loginAction(AuthenticationUtils $authenticationUtils): Response
-    {
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        return $this->render('@ApplicationProjectUser/auth/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
-    }
-
-    public function logoutAction(): void
-    {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-    }
+    protected string $historyAction = "ROLE_ADMIN_USER_HISTORY";
 
 
 

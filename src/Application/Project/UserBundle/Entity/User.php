@@ -24,15 +24,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(name: 'roles', unique: false)]
-    #[OA\Property(type: 'object')]
-    private array $roles = [];
-
-    /** @var string The hashed password */
+    /** @var ?string The hashed password */
     #[ORM\Column]
     #[OA\Property(writeOnly: true)]
     private ?string $password = null;
 
+    #[ORM\Column(name: 'roles', unique: false)]
+    #[OA\Property(type: 'object')]
+    private array $roles = [];
+
+    #[ORM\Column(name: 'admin_roles', unique: false)]
+    #[OA\Property(type: 'object')]
+    private array $adminRoles = [];
+
+    #[ORM\Column(name: 'api_roles', unique: false)]
+    #[OA\Property(type: 'object')]
+    private array $apiRoles = [];
 
     #[ORM\ManyToMany(targetEntity: "App\Application\Project\UserBundle\Entity\Group")]
     #[ORM\JoinTable(name: "user_group")]
@@ -100,12 +107,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+
+        /** Traz todas as ROLES que o usuário individualmente possui! */
+
+        $rolesAdmin = $this->getAdminRoles();
+        $rolesApi = $this->getApiRoles();
 
         foreach ($this->getGroups() as $group) {
-            $roles = array_merge( $roles, $group->getAdminRoles(), $group->getApiRoles() );
+            $rolesAdmin = array_merge( $rolesAdmin, $group->getAdminRoles() );
+            $rolesApi = array_merge( $rolesApi, $group->getApiRoles() );
         }
+
+        $roles = array_merge( $roles, $rolesAdmin, $rolesApi );
 
         return array_unique(array_values(array_filter($roles)));
     }
@@ -151,6 +164,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->groups = $groups;
     }
 
+    /** @return array */
+    public function getAdminRoles(): array
+    {
+        $roles = $this->adminRoles;
+
+        return array_unique(array_values(array_filter($roles)));
+    }
+
+    public function setAdminRoles(array $adminRoles): void
+    {
+        $this->adminRoles = $adminRoles;
+    }
+
+    /** @return array */
+    public function getApiRoles(): array
+    {
+        $roles = $this->apiRoles;
+
+        return array_unique(array_values(array_filter($roles)));
+    }
+
+    public function setApiRoles(array $apiRoles): void
+    {
+        $this->apiRoles = $apiRoles;
+    }
 
 
 }
