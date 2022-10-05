@@ -2,7 +2,37 @@ sonata_admin:
     title: 'Sonata Admin'
     dashboard:
         blocks:
-            - { type: sonata.admin.block.admin_list, position: left }
+            - { type: sonata.admin.block.admin_list, position: center }
+
+            -
+                position: top
+                class: col-md-12
+                type: sonata.block.service.text
+                settings:
+                    content: >
+                        <div class="jumbotron" style="background-color: #2b2c2d; background-size: 100%;">
+                            <div class="conteiner" >
+                                
+                                <h1 class="text-center" style="color:white">
+                                    Projeto Base
+                                </h1>
+                                <h3 class="text-center" style="color:white">
+                                    Symfony 6, PHP 8.1, Sonata Admin, JWT Token
+                                </h3>
+                                <br><br>
+                                <h4 class="text-right" style="color:white; margin-right: 50px;">
+                                    Sistema Desenvolvido Por:
+                                    <a style="color:white;" target="_blank" href="https://www.linkedin.com/in/alan-azeredo-guedes-786575191/" aria-hidden="true">
+                                        <b>Alan Guedes</b>
+                                    </a>
+                                </h4>
+                            </div>
+                        </div>
+                        <br>
+                        
+
+#####################################################################################################
+#####################################################################################################
 
     #default_controller: App\Application\Project\AdminBundle\Controller\DefaultCRUDController
 

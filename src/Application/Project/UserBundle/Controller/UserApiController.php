@@ -71,7 +71,6 @@ class UserApiController extends DefaultAbstractController
             return $this->validateJsonRequestBody($requestBody, $parameters);
 
 
-
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $requestBody->email]);
 
         if(!$user || !$passwordHasher->isPasswordValid($user, $requestBody->password))
@@ -102,15 +101,13 @@ class UserApiController extends DefaultAbstractController
     )]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/user/authenticated', name: 'user_by_token', methods: ['GET'])]
-    public function userByTokenAction(ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    public function userAuthenticatedAction(ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $user = $this->getUser();
 
         $serializer = new Serializer([new ObjectNormalizer()]);
         $data = $serializer->normalize($user, null, [AbstractNormalizer::ATTRIBUTES => [
-            'id',
-            'username',
-            'email',
+            'id', 'username', 'email',
             'groups' => ['id', 'name', 'description']
         ] ]);
 
@@ -149,16 +146,14 @@ class UserApiController extends DefaultAbstractController
     {
         $users = $doctrine->getRepository(User::class)->findAll();
 
-        $data = [];
 
-        foreach ($users as $user) {
-            $data[] = [
-                'id' => $user->getId(),
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-                'roles' => $user->getRoles(),
-            ];
-        }
+        $serializer = new Serializer([new ObjectNormalizer()]);
+        $data = $serializer->normalize($users, null, [AbstractNormalizer::ATTRIBUTES => [
+            'id',
+            'username',
+            'email',
+            'groups' => ['id', 'name', 'description']
+        ] ]);
 
         return $this->json($data);
     }

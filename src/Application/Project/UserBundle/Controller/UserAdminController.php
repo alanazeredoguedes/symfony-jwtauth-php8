@@ -3,35 +3,112 @@
 namespace App\Application\Project\UserBundle\Controller;
 use App\Application\Project\ContentBundle\Attributes\ARR;
 use App\Application\Project\ContentBundle\Controller\DefaultCRUDController;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[ARR(groupName: 'Usuario', description: 'Permissões do modulo de Usuario')]
 class UserAdminController extends DefaultCRUDController
 {
+
     #[ARR(routerName: 'listAction', role: "ROLE_ADMIN_USER_LIST", title: 'Listar')]
-    protected string $listAction = "ROLE_ADMIN_USER_LIST";
+    public function listAction(Request $request): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_LIST");
+
+        return parent::listAction($request);
+    }
 
     #[ARR(routerName: 'showAction', role: "ROLE_ADMIN_USER_SHOW", title: 'Visualizar')]
-    protected string $showAction = "ROLE_ADMIN_USER_SHOW";
+    public function showAction(Request $request): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_SHOW");
+
+        return parent::showAction($request);
+    }
 
     #[ARR(routerName: 'createAction', role: "ROLE_ADMIN_USER_CREATE", title: 'Criar')]
-    protected string $createAction = "ROLE_ADMIN_USER_CREATE";
+    public function createAction(Request $request): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_CREATE");
+
+        return parent::createAction($request);
+    }
 
     #[ARR(routerName: 'editAction', role: "ROLE_ADMIN_USER_EDIT", title: 'Editar')]
-    protected string $editAction  = "ROLE_ADMIN_USER_EDIT";
+    public function editAction(Request $request): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_EDIT");
+
+        return parent::editAction($request);
+    }
 
     #[ARR(routerName: 'deleteAction', role: "ROLE_ADMIN_USER_DELETE", title: 'Excluir')]
-    protected string $deleteAction = "ROLE_ADMIN_USER_DELETE";
+    public function deleteAction(Request $request): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_DELETE");
+
+        return parent::deleteAction($request);
+    }
 
     #[ARR(routerName: 'batchAction', role: "ROLE_ADMIN_USER_BATCH", title: 'Excluir em Lote')]
-    protected string $batchAction = "ROLE_ADMIN_USER_BATCH";
+    public function batchActionDelete(ProxyQueryInterface $query): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_BATCH");
+
+
+        return parent::batchActionDelete($query);
+    }
+
+    public function batchAction(Request $request): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_BATCH");
+
+        return parent::batchAction($request);
+    }
 
     #[ARR(routerName: 'exportAction', role: "ROLE_ADMIN_USER_EXPORT", title: 'Exportar')]
-    protected string $exportAction = "ROLE_ADMIN_USER_EXPORT";
+    public function exportAction(Request $request): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_EXPORT");
+
+        return parent::exportAction($request);
+    }
 
     #[ARR(routerName: 'historyAction', role: "ROLE_ADMIN_USER_HISTORY", title: 'Auditoria')]
-    protected string $historyAction = "ROLE_ADMIN_USER_HISTORY";
+    public function historyAction(Request $request): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_HISTORY");
+
+        return parent::historyAction($request);
+    }
+
+    public function historyViewRevisionAction(Request $request, string $revision): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_HISTORY");
+
+
+        return parent::historyViewRevisionAction($request, $revision);
+    }
+
+    public function historyCompareRevisionsAction(Request $request, string $baseRevision, string $compareRevision): Response
+    {
+        /** Access Control Validate */
+        $this->validateAccess("ROLE_ADMIN_USER_HISTORY");
+
+        return parent::historyCompareRevisionsAction($request, $baseRevision, $compareRevision);
+    }
 
 
 

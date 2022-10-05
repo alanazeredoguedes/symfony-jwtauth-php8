@@ -5,12 +5,16 @@ namespace App\Application\Project\UserBundle\Entity;
 use App\Application\Project\UserBundle\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use OpenApi\Attributes as OA;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: '_user')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity('username', 'O username definido já está sendo utilizado')]
+#[UniqueEntity('email', 'O email definido já está sendo utilizado')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -138,9 +142,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword($password): self
     {
-        $this->password = $password;
+        if($password)
+            $this->password = $password;
 
         return $this;
     }
